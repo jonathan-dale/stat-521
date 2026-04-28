@@ -44,6 +44,10 @@ The caret package can be used to demonstrate proper train/test splitting, use cr
 ######################################################################################
 
 
+The final project is hosted here:
+
+https://htmlpreview.github.io/?https://github.com/jonathan-dale/stat-521/blob/main/homework/final-project/Final-Project.html
+
 ###### scratch notes:
 
 ```r
