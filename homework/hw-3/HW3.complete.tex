@@ -1,0 +1,341 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Homework 3},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Homework 3}
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+\maketitle
+
+\textbf{This homework is due on Wednesday, October 22 2025 by 11:59pm.
+Please show all your work and justify your answers. Use R to compute the
+probabilities.}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Trees are subjected to different levels of carbon dioxide atmosphere
+  with 6\% of them in a minimal growth condition at 350 parts per
+  million (ppm), 10\% at 450 ppm (slow growth), 47\% at 550 ppm
+  (moderate growth), and 37\% at 650 ppm (rapid growth). What are the
+  mean and standard deviation of the carbon dioxide atmosphere (in ppm)
+  for these trees in ppm?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# minimal p=6\% 350ppm}
+\CommentTok{\# slow p=10\% 450ppm}
+\CommentTok{\# moderate p=47\% 550ppm}
+\CommentTok{\# rapid p=37\% 650ppm}
+\DocumentationTok{\#\# What are the mean and standard deviation of the carbon dioxide atmosphere for these trees in ppm? }
+\NormalTok{rapid }\OtherTok{\textless{}{-}} \DecValTok{650}
+\NormalTok{moderate }\OtherTok{\textless{}{-}} \DecValTok{550}
+\NormalTok{slow }\OtherTok{\textless{}{-}} \DecValTok{450}
+\NormalTok{minimal }\OtherTok{\textless{}{-}} \DecValTok{350}
+
+\DocumentationTok{\#\# Mean calculation}
+\CommentTok{\# 650 + 550 + 450 + 350 = 2000}
+\CommentTok{\# 2000 / 4 = 500}
+
+\CommentTok{\# create a vector}
+\NormalTok{mean\_vector }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(rapid, moderate, slow, minimal)}
+
+\CommentTok{\# calculate and print the mean}
+\NormalTok{mean\_value }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(mean\_vector)}
+\CommentTok{\# print(sprintf("The mean is \%sppm", mean\_value))}
+
+
+
+\DocumentationTok{\#\# Standard Deviation calculation}
+\CommentTok{\# 1. find the mean  = 500}
+
+\CommentTok{\# 2. subtract the mean from all the values}
+  \CommentTok{\# 650 {-} 500 = 150}
+  \CommentTok{\# 550 {-} 500 = 50 }
+  \CommentTok{\# 450 {-} 500 = {-}50}
+  \CommentTok{\# 350 {-} 500 = {-}150}
+\NormalTok{a }\OtherTok{=}\NormalTok{ rapid }\SpecialCharTok{{-}}\NormalTok{ mean\_value}
+\NormalTok{b }\OtherTok{=}\NormalTok{ moderate }\SpecialCharTok{{-}}\NormalTok{ mean\_value}
+\NormalTok{c }\OtherTok{=}\NormalTok{ slow }\SpecialCharTok{{-}}\NormalTok{ mean\_value}
+\NormalTok{d }\OtherTok{=}\NormalTok{ minimal }\SpecialCharTok{{-}}\NormalTok{ mean\_value}
+
+\CommentTok{\# 3. Square the results}
+  \CommentTok{\# 150 * 150 = 22500}
+  \CommentTok{\# 50 * 50 = 2500}
+  \CommentTok{\# ({-}50) * ({-}50) = 2500}
+  \CommentTok{\# ({-}150) * ({-}150) = 22500}
+\NormalTok{a\_2 }\OtherTok{=}\NormalTok{ a }\SpecialCharTok{*}\NormalTok{ a}
+\NormalTok{b\_2 }\OtherTok{=}\NormalTok{ b }\SpecialCharTok{*}\NormalTok{ b}
+\NormalTok{c\_2 }\OtherTok{=}\NormalTok{ c }\SpecialCharTok{*}\NormalTok{ c}
+\NormalTok{d\_2 }\OtherTok{=}\NormalTok{ d }\SpecialCharTok{*}\NormalTok{ d}
+
+\NormalTok{my\_variance\_vector }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(a\_2, b\_2, c\_2, d\_2)}
+\CommentTok{\# print(my\_variance\_vector)}
+
+\CommentTok{\# 4. Find the mean of the squared deviations (the variance)}
+\NormalTok{my\_variance\_mean }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(my\_variance\_vector)}
+\CommentTok{\# print(my\_variance\_mean)}
+
+\NormalTok{standard\_deviation }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(my\_variance\_mean)}
+\CommentTok{\# print(standard\_deviation)}
+
+
+
+\FunctionTok{print}\NormalTok{(}\StringTok{"***** Final result *****"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "***** Final result *****"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(}\FunctionTok{sprintf}\NormalTok{(}\StringTok{"The Mean is \%sppm."}\NormalTok{, mean\_value))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "The Mean is 500ppm."
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(}\FunctionTok{sprintf}\NormalTok{(}\StringTok{"Standard Deviation is \%.1fppm."}\NormalTok{, }\SpecialCharTok{+}\NormalTok{ standard\_deviation))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Standard Deviation is 111.8ppm."
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\item
+  Suppose that in the U.S. in 2011, 70\% of new start-ups failed in
+  their first year. If there were 50 start-ups in the DMV area in 2011,
+  what is the probability that 35 or more failed? What assumption did
+  you need to make about the DMV?
+\item
+  A research team has developed a face recognition device to match
+  photos in a database. From laboratory tests, the recognition accuracy
+  is 92\% and trials are assumed to be independent.
+\end{enumerate}
+
+\begin{itemize}
+\item
+  If the research team continues to run laboratory tests, what is the
+  mean number of trials until failure?
+\item
+  What is the probability that the first failure occurs on the tenth
+  trial?
+\item
+  To improve the recognition algorithm, a chief engineer decides to
+  collect 10 failures. How many trials are expected to be needed?
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\item
+  You roll a die until obtaining two consecutive numbers that match.
+  What it is the probability that it takes exactly \(x\) rolls to do
+  this, for \(x\) an integer greater than 1?
+\item
+  The MIT-BIT arrhythmia database contains 48 heart signal recordings
+  with 22 and 26 from female and male patients, respectively. For a
+  classification task, an analyst randomly selects 36 records for
+  predictive model training and keeps the other 12 records for testing
+  the model performance.
+\end{enumerate}
+
+\begin{itemize}
+\item
+  What is the expected number of female patient recordings selected for
+  training?
+\item
+  What is the probability that at least three male patient recordings
+  are selected for training?
+\item
+  What is the probability that the same number of male and female
+  patients are used for testing the model performance?
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{5}
+\tightlist
+\item
+  An engineer is participating in a research project on the title
+  patterns of junk emails. The number of junk emails which arrive in an
+  individual's account every hour follows a Poisson distribution with a
+  mean of 1.2.
+\end{enumerate}
+
+\begin{itemize}
+\item
+  What is the expected number of junk emails that an individual receives
+  in an 8 hour day?
+\item
+  What is the probability that an individual receives more than two junk
+  emails for the next three hours?
+\item
+  What is the probability that an individual receives no junk email for
+  two hours?
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{6}
+\tightlist
+\item
+  Consider a random variable \(X\) with probability density function
+  \(f(x) = \theta x^{\theta-1}\) for \(0<x<1\), where \(\theta>0\) is
+  the parameter that controls the pdf.
+\end{enumerate}
+
+\begin{itemize}
+\item
+  Show that \(f(x)\) is a valid pdf
+\item
+  Plot the pdf for \(\theta \in \{1/3,1/2,1,2,3\}\). Describe how the
+  distribution changes for different values of \(\theta\).
+\item
+  Find a general expression for the expected value and variance of
+  \(X\).
+\item
+  Find a general expression for the cumulative distribution function
+  (cdf)
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{7}
+\tightlist
+\item
+  Web crawlers need to estimate the frequency of changes to Web sites to
+  maintain a current index for Web searches. Assume that the changes to
+  a Web site follow a Poisson process with a mean of 6 days. Let a
+  random variable \(X\) denote the time (in days) until the next change.
+\end{enumerate}
+
+\begin{itemize}
+\item
+  What is the probability that the next change occurs in less than 4.5
+  days?
+\item
+  What is the probability that the time until the next change is greater
+  9.5 days?
+\item
+  What is the time of the next change that is exceeded with probability
+  90\%?
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,279 @@
+---
+title: 'Homework 3: Exponential & Gamma via Poisson Processes and Monte Carlo'
+date: "10/22/2025"
+output:
+  html_document:
+    df_print: paged
+    code_folding: hide
+  pdf_document: default
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+set.seed(521)
+```
+
+### Overview & Motivation
+
+Suppose web requests (or API calls) arrive randomly to a server. When arrivals are independent and have a constant average rate over time, a classic model is the Poisson process with rate $\lambda$ (arrivals per unit time). Two fundamental random variables arise:
+
+- Inter-arrival time ($X$): time from one request to the next. If arrivals follow a Poisson process, then $X$ follows an Exponential distribution, $X \sim \mathrm{Exp}(\lambda)$.
+
+- Waiting time to the $k$-th arrival ($T_k$): sum of $k$ inter-arrival times, which yields $T_k \sim \mathrm{Gamma}(k, \, \lambda)$ (also called Erlang when $k$ is an integer).
+
+These distributions show up in network traffic (packet/request timing), call centers, radiation detection, reliability (time-to-failure) and queueing models. The Exponential’s memoryless property and the Gamma’s “sum of exponentials” structure are the key features you’ll explore—both analytically and via Monte Carlo simulation.
+
+> **Goal of this HW.** Build intuition for Exponential & Gamma from first principles, verify properties via **Monte Carlo**, and connect to **Poisson counts**.
+
+---
+
+#### 1) From Poisson counts to the Exponential waiting time
+
+> In a Poisson process with rate $\lambda$, “no arrivals in $(0,x]$” has probability $e^{-\lambda x}$. The **waiting time** $X$ to the next arrival then satisfies $P(X>x)=e^{-\lambda x}$.
+
+Imagine time flowing continuously, and "events" (like web requests, calls, or radioactive decays) arriving at random times according to a Poisson process with rate $\lambda$:
+
+- $\lambda$ = average number of arrivals per unit time (e.g., 2 arrivals per minute).
+
+The key assumptions of a Poisson process:
+
+- Events occur independently, and
+
+- The number of arrivals in any time interval of length $t$ follows $N(t)\sim \mathrm{Poisson}(\lambda t)$, meaning that $\Pr(N(t)=k)=\frac{e^{-\lambda t}(\lambda t)^k}{k!},\ k=0,1,2,\ldots$.
+
+Define the **waiting time** random variable $X$ as the time to first arrival. Then, the event $\{X>x\}$ is exactly the event that no arrivals have occurred in $(0,x]$,
+i.e.
+\[
+\{X>x\}=\{N(x)=0\}.
+\]
+Hence, using the Poisson probability for zero counts,
+\[
+\Pr(X>x)=\Pr\{N(x)=0\}=e^{-\lambda x},\qquad x\ge 0.
+\]
+
+From this definition, it should be clear that the cdf of $X$ is $F_X(x) = 1-e^{-\lambda x}$ and consequently, the probability density function is $f_X(x) = \lambda e^{-\lambda x}$. 
+
+That is, $X \sim Exp(\lambda)$. Using integration by parts, we can easily show that $E[X]=1/\lambda$ and $\mathrm{Var}(X)=1/\lambda^2$.
+
+**Memoryless Property of the Exponential Distribution ** Let $X \sim Exp(\lambda)$ be a random variable representing the waiting time until the next event in a Poisson process with rate $\lambda>0$. Then, for any $s,t>0$, 
+$$P(X>s+t \mid X>s)=P(X>t)$$ 
+This means that the probability of waiting more than $t$
+additional time units does not depend on how long you have already waited ($s$). In other words, the exponential distribution has no memory of the past.The exponential distribution is the only continuous distribution that satisfies this memoryless property.
+
+**Exercise 1.** Prove the memoryless property of the Expenential distribution (Hint: use the definition of conditional probability).
+
+**Solution**
+The solution is attached to canvas.
+
+---
+
+#### 2) Monte Carlo: verifying Exponential properties
+
+Suppose web requests arrive to a server according to a Poisson process with rate $\lambda=0.5$ requests per minute (so the mean inter-arrival time is 2 minutes). Let $X$ denote an inter-arrival time.
+
+**Exercise 2** Generate $n=100$ samples for web-requests inter-arrival times (Hint: use `rexp`). Compute the empirical mean and variance and compare them to the theoretical values. Repeat the process for $n=100,000$. Briefly explain what you observe.
+
+
+**Solution**
+For an exponential distribution the theoretical mean and variance is described below.
+
+Theoretical mean E[$X$] = 1/$\lambda$  
+Theoretical variance V[$X$] = 1/($\lambda$)^2  
+
+Observations: When the sample size increases to 100K we see the empirical mean and variance get closer to their theoretical values. 
+
+```{r echo=TRUE}
+
+# Define the rate parameter (lambda)
+lambda <- 0.5
+# Define the theoretical mean and variance
+theoretical_mean <- 1 / lambda
+theoretical_variance <- 1 / (lambda^2)
+
+# Function to perform the simulation and comparison
+simulate_and_compare <- function(n_samples, lambda_rate) {
+  # Generate n samples for inter-arrival times
+  samples <- rexp(n_samples, rate = lambda_rate)
+
+  # Compute the empirical mean and variance
+  empirical_mean <- mean(samples)
+  empirical_variance <- var(samples)
+
+  # Print results
+  cat(sprintf("Results for n = %d samples:\n", n_samples))
+  cat(sprintf("  Empirical Mean:    %.4f\n", empirical_mean))
+  cat(sprintf("  Theoretical Mean:  %.4f\n", theoretical_mean))
+  cat(sprintf("  Difference (Mean): %.4f\n", abs(empirical_mean - theoretical_mean)))
+  cat(sprintf("  Empirical Variance:    %.4f\n", empirical_variance))
+  cat(sprintf("  Theoretical Variance:  %.4f\n", theoretical_variance))
+  cat(sprintf("  Difference (Variance): %.4f\n\n", abs(empirical_variance - theoretical_variance)))
+}
+
+# Run for n = 100
+simulate_and_compare(100, lambda)
+
+# Run for n = 100,000
+simulate_and_compare(100000, lambda)
+
+```
+
+
+
+**Exercise 3** Plot a histogram of the generated data for $n=100$ and $n=100,000$ and overlay the theoretical pdf. Briefly describe what you observe.
+
+
+**Solution**
+Observation:
+We can see that when n = 100 the histogram is jagged and only provides a rough estament of the theoretical measurement of the exponential PDF. The sample size of n = 100000 approximates the theoretical measurement much better and the plot is much smoother.  
+
+```{r echo=TRUE}
+# Set a seed for reproducibility
+set.seed(123)
+
+# Define the rate parameter (lambda)
+lambda <- 1
+
+# Generate data for n = 100
+n_100 <- 100
+data_100 <- rexp(n_100, rate = lambda)
+
+# Generate data for n = 100,000
+n_100k <- 100000
+data_100k <- rexp(n_100k, rate = lambda)
+
+# Set up the plotting area to show two plots side-by-side
+par(mfrow = c(1, 2))
+
+# Plot for n = 100
+hist(data_100, freq = FALSE, breaks = 20, col = "lightblue",
+     main = "n = 100", xlab = "Value", ylab = "Density",
+     ylim = c(0, lambda * 1.1)) # Adjust ylim for consistency
+
+curve(dexp(x, rate = lambda), col = "red", lwd = 2, add = TRUE)
+legend("topright", legend = c("Sample Density", "Theoretical PDF"),
+       col = c("lightblue", "red"), lty = c(1, 1), lwd = c(10, 2), cex = 0.8)
+
+# Plot for n = 100,000
+hist(data_100k, freq = FALSE, breaks = 100, col = "lightblue",
+     main = "n = 100,000", xlab = "Value", ylab = "Density",
+     ylim = c(0, lambda * 1.1)) # Adjust ylim for consistency
+
+curve(dexp(x, rate = lambda), col = "red", lwd = 2, add = TRUE)
+legend("topright", legend = c("Sample Density", "Theoretical PDF"),
+       col = c("lightblue", "red"), lty = c(1, 1), lwd = c(10, 2), cex = 0.8)
+
+# Reset plotting area to default
+par(mfrow = c(1, 1))
+
+```
+
+
+
+
+**Exercise 4** (Monte Carlo memoryless check). Use your simulated exponential sample with $n=100,000$ from Exercise 2 to empirically verify the memoryless property. Estimate $P(X>s+t\mid X>s)$ and $P(X>t)$ for $s=3$ and $t=4$. Report both estimates and compare them. Discuss Monte Carlo error if numbers are close but not identical.  
+
+
+**Solution**
+Discussion:   
+The numbers are not identical but very close, approximately equal. This empirically supports the memory-less property of the exponential distribution. The Monte Carlo error is the inherent randomness and sampling variability associated with using a finite number of random samples to estimate a true population parameter.   
+
+```{r echo=TRUE}
+# Estimate P(X > s+t | X > s)
+s <- 3
+t <- 4
+conditional_prob_estimate <- sum(data_100k > s+t) / sum(data_100k > s)
+
+# Estimate P(X > t)
+unconditional_prob_estimate <- sum(data_100k > t) / n_100k
+
+# Print the results
+print(paste("Estimated P(X > 7 | X > 3):", conditional_prob_estimate))
+print(paste("Estimated P(X > 4):", unconditional_prob_estimate))
+
+```
+
+
+---
+
+#### 3) Gamma as a sum of exponentials
+
+In a Poisson process with rate $\lambda$, the waiting time between consecutive events is modeled by an
+exponential random variable $X_i \sim \mathrm{Exp}(\lambda)$.
+If we let
+\[
+T_k = X_1 + X_2 + \cdots + X_k,
+\]
+then $T_k$ represents the total waiting time until the $k$-th event occurs.
+
+It can be shown that
+\[
+T_k \sim \mathrm{Gamma}(k, \lambda),
+\]
+with mean $\mathbb{E}[T_k] = k/\lambda$ and variance $\mathrm{Var}(T_k) = k/\lambda^2$.
+This relationship connects the exponential and gamma distributions:
+the exponential models the waiting time to the \emph{first} event,
+while the gamma models the waiting time to the \emph{$k$-th} event.
+
+
+**Exercise 5** (Simulation) For $\lambda=0.5$ and $k=5$, generate two samples of size $n=10,000$:  
+
+(i) Directly from the gamma distribution (Hint: use `rgamma`).
+
+(ii) As the sum of $k$ exponentials.
+
+Compute the sample means and variances of both samples and compare them to the theoretical values. Plot histograms of the two sample (ideally over the same axis) and compare them. Briefly discuss what you observe.
+
+**Solution**
+
+Observation:
+For the given parameters, k = 5 and lambda = 0.5 the theoretical mean and variance are as follows:   
+Theoretical mean is k/lambda = 5/.5 = 10  
+Theoretical variance is k/lambda^2 = 5/(.5)^2 = 20  
+
+
+This demonstrates the Law of Large Numbers where the sample size large enough will converge towards their population parameters.
+
+```{r echo=TRUE}
+
+l <- .5
+k <- 5
+n_10K <- 10000
+
+
+# Theoretical values for Gamma distribution
+theoretical_mean <- k / l
+theoretical_variance <- k / (l^2)
+
+# Create a sample directly using rgamma
+direct_gamma_sample <- rgamma(n_10K, shape = k, rate = l)
+
+# Create a sample as the sum of k exponential
+exponential_sums <- matrix(rexp(n_10K * k, rate = l))
+sample_sum_of_exponentials <- rowSums(exponential_sums)
+
+
+# View the data
+# head(direct_gamma_sample)
+# head(sample_sum_of_exponentials)
+
+# Compute mean and variance of both samples
+mean_direct_gamma_sample <- mean(direct_gamma_sample)
+variance_direct_gamma_sample <- var(direct_gamma_sample)
+
+
+mean_sample_sum_of_exponentials <- mean(sample_sum_of_exponentials)
+var_sample_sum_of_exponentials <- var(sample_sum_of_exponentials)
+
+
+
+# Plot histograms
+hist(direct_gamma_sample, breaks = 50, col = rgb(0, 0, 1, 0.5),
+     main = "Comparison of Gamma Samples", xlab = "Value",
+     freq = FALSE, xlim = range(c(direct_gamma_sample, sample_sum_of_exponentials)))
+hist(sample_sum_of_exponentials, breaks = 50, col = rgb(1, 0, 0, 0.5), add = TRUE, freq = FALSE)
+legend("topright", legend = c("Direct Gamma", "Sum of Exponentials"),
+       fill = c(rgb(0, 0, 1, 0.5), rgb(1, 0, 0, 0.5)))
+```
+

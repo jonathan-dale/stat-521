@@ -1,0 +1,241 @@
+---
+title: "Lab 2 Homework"
+author: "Your name"
+date: "09/24/2025"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align="center", message=FALSE, warning=FALSE)
+```
+
+**This homework is due on Wednesday, September 24 2025 by 11:59pm. Please show all your work and justify your answers.**
+
+1. Make a scatterplot of weight versus desired weight. Describe the relationship between these two variables.
+
+Resp: 
+The relationship between the weight and desired weight: The desired weight is more often less than the current weight with the exception of a few outliers. As weight increases the desired weight seems to be decreasing however this observation is not as pronounced at the lower levels of weight values.
+
+```{r, echo=TRUE, out.width = '55%'}
+source("cdc.R")
+names(cdc)
+plot(cdc$weight,cdc$wtdesire)
+
+```
+
+2. Let's consider a new variable: the difference between desired weight (`wtdesire`) and current weight (`weight`). Create this new variable by subtracting the two columns in the data frame and assigning them to a new object called `wdiff`.
+
+```{r, echo=TRUE, out.width = '45%'}
+# Include your code here
+wdiff <-  cdc$weight - cdc$wtdesire
+plot(cdc$weight, wdiff)
+```
+
+3. What type of data is `wdiff`? If an observation `wdiff` is 0, what does this mean about the person's weight and desired weight. What if `whiff` is positive or negative?
+
+Resp: 
+We can determine the type of `wdiff` by using the `typeof(wdiff)` function to see that it is an integer with values that can range between 1 and 20000. If the observed value of `wdiff` is 0, this means the person actual weight and desired weight are the same. If `wdiff` is positive, the person would like to weigh less than they actually do, if `wdiff` is negative the person would like to weigh more than they currently do at the time of the survey.
+
+In the plot above, most values of desired weight are usually not above ~200 and never above 300. 
+
+
+
+
+4. Describe the shape of the distribution of `wdiff` include any plots you use. What does this tell us about how people feel about their current weight?
+
+Resp: 
+The data show slightly right skewed, centered around 10 with a mean of 14.59. This information was found with the `summary(wdiff)` function will return summary statistics that are useful in finding more information about a variable.
+
+I created the plots below for visualizing information related to the `wdiff` variable and we can see that very few people would like to increase their weight and the slight right skewed tail is visible in the density plot. 
+
+```{r, echo=TRUE, out.width = '45%'}
+# Include your code here
+source("cdc.R")
+print("The summary of the variable 'wdiff'.....")
+summary(wdiff)
+hist(wdiff)
+#hist(rnorm(wdiff))
+#hist((wdiff))
+plot(density(wdiff))
+```
+
+
+5. Using numerical summaries and a side-by-side box plot, determine if men tend to view their weight differently than women. Explain.
+
+Resp:
+Men would like to increase their weight while  females while more females tend to desire less weight than males but only slightly. The violin plot clearly shows that the range varies much more in males than females.
+
+
+Analysis of code below:
+I started out by making simple summary of the `cdc$gender` to see if the data is evenly distributed and it shows that there are about 900 more makes than females, but since the sample includes over 9000 of each gender, we can expect to make valid assumptions about the population given this sample size. I then create a simple data frame which includes the gender, current weight and desired weight. Next I modify the data frame to include a weight difference column. Next, I create a few different plots, none of which were very useful, these were commented out and left for future reference.
+
+Creating a bar plot seems to be a more useful method of viewing this data and it is clear that females desire a larger weight difference than males.
+
+After this, I installed ggplot2 packages and create a more sophisticated plot which is useful; in this plot it becomes apparent that more females desire to have a lower weight than males. 
+
+I can see by the final summary statistic grouping by gender, the male group has an outlier. I think that this single point makes the data seem that males would like to increase their weight since the weight_difference is negative and thought we do see this in the female group it is much lower. 
+
+
+```{r, echo=TRUE,out.width = '45%'}
+# Include your code here
+source("cdc.R")
+print("Summary of the cdc$gender")
+summary(cdc$gender)
+
+
+
+# create a sample data frame containing gender, weight and desired weight
+df <- data.frame(
+  gender = cdc$gender,
+  current_weight = cdc$weight,
+  desired_weight = cdc$wtdesire
+)
+
+# view the data frame
+print(df)
+
+# now add a column for the weight differences
+df$weight_differences <- df$current_weight - df$desired_weight
+
+# view the updated data frame
+print(df)
+
+
+# Make a numerical summary of the weight_difference variable
+print("Summary of the weight_differences variable")
+summary(df$weight_differences)
+
+## This creates the same histogram as in question 3 above, but since it is not specific to gender it is not useful to determine if men tend to view their weight differently than women.
+# hist(df$weight_differences)
+
+
+# # The box plot below was not useful in viewing any of the data, it is actually a really messy chart!
+# # keep for future reference.
+# boxplot(weight_differences ~ gender, data = df,
+#         main = "Weight differences by gender",
+#         xlab = "hold for x",
+#         ylab = "hold for y",
+#         col = c("lightblue", "lightpink"))
+
+
+# calculate the average weight differences by gender
+avg_diff <- aggregate(weight_differences ~ gender, data = df, mean)
+
+# create a bar plot
+barplot(avg_diff$weight_differences,
+        names.arg = avg_diff$gender,
+        main = "Average Weight Difference by Gender, simple barplot",
+        xlab = "Gender",
+        ylab = "Average Weight Difference",
+        col = c("lightblue", "lightpink"))
+
+
+
+## install.packages("ggplot2")
+library(ggplot2)
+
+# create a more sophisticated plot
+ggplot(df, aes(x = gender, y = weight_differences, fill = gender)) +
+  geom_violin(alpha = 0.8) +
+  labs(title = "Weight Difference Distribution by Gender (violin)",
+       x = "Gender",
+       y = "Weight difference") +
+  theme_gray() +
+  scale_fill_manual(values = c("lightblue", "lightpink"))
+
+
+
+ggplot(df, aes(x = weight_differences, fill = gender)) +
+  geom_histogram(alpha = 0.4, position = "identity", bins = 10) +
+  labs(title = "Weight Difference Distribution by Gender (identity)",
+       x = "Gender",
+       y = "Weight difference") +
+  theme_minimal() +
+  scale_fill_manual(values = c("lightblue", "lightpink"))
+
+
+
+ggplot(df, aes(x = weight_differences, fill = gender)) +
+  geom_histogram(alpha = 0.8, position = "dodge", bins = 10) +
+  facet_wrap( ~ gender) +
+  labs(title = "Weight Difference Distribution by Gender (dodge)",
+       x = "Gender",
+       y = "Weight difference") +
+  theme_minimal() +
+  scale_fill_manual(values = c("lightblue", "lightpink"))
+
+# use summary function grouping the data by gender
+print("sumary grouped by gender")
+by(df$weight_differences, df$gender, summary)
+
+
+       
+```
+
+6. Now it's time to get creative. Find the mean and standard deviation of `weight` and determine what proportion of the weights are within one standard deviation of the mean.
+
+Resp:
+The mean of the `weight` can be found using the mean() function and it has a value of 169.683. The standard deviation of the `weight` can be found using the sd() function and its value is 40.08.
+
+To find out what proportion of the weights are within one standard deviation of the mean we will use a data frame which includes a value for `weight` and standard deviation. Next we can subtract weight from standard deviation and count the result. 
+
+```{r, echo=TRUE,out.width = '45%'}
+# Include your code here
+source("cdc.R")
+print("The mean of cdc.weight is:")
+mean(cdc$weight)
+print("The standard deviation of cdc.weight is:")
+sd(cdc$weight)
+
+df <- data.frame(
+  cdc$weight)
+
+# now add a column for the mean and standard deviation
+df$cdc_mean <- mean(cdc$weight)
+df$cdc_sd <- sd(cdc$weight)
+
+# create variables for the mean and standard deviation
+cdc_mean <- mean(cdc$weight)
+cdc_sd <- sd(cdc$weight)
+
+# use the computed values to create a new column in the data frame for the weight - mean.
+df$weight_less_mean <- cdc$weight - cdc_mean
+
+
+# proportion_total <- df$cdcweight - df$cdc_mean |> df$cdc_sd
+
+
+
+# now check if the weight_less_mean values are positive
+print("Counting the positive values")
+within_one_sd_of_mean <- sum(df$weight_less_mean > 0, na.rm = TRUE)
+
+print("The total number of weights that are within one SD is: ")
+print(within_one_sd_of_mean)
+
+
+
+print("Table displaying the number of poistive and negative weights are:")
+table(sign(df$weight_less_mean), useNA = "ifany")
+
+total_in_df <- sum(!is.na(df$cdc.weight))
+print("the total values in the data frame ")
+print(total_in_df)
+
+print("The proportion of the weights within one standard deviation of the mean is:")
+proportion_within_one_sd_mean <- within_one_sd_of_mean / total_in_df
+print(proportion_within_one_sd_mean)
+
+
+# display the data frame
+print(df)
+
+# df$weight_differences <- df$current_weight - df$desired_weight
+# df$within_one_sd <- cdc$weight
+
+
+```
+

@@ -1,0 +1,139 @@
+---
+title: "Homework 3"
+output:
+  html_document:
+    df_print: paged
+    code_folding: hide
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align="center", message=FALSE, warning=FALSE)
+```
+
+**This homework is due on Wednesday, October 22 2025 by 11:59pm. Please show all your work and justify your answers. Use R to compute the probabilities.**
+
+1. Trees are subjected to different levels of carbon dioxide atmosphere with 6\% of them in a minimal growth condition at 350 parts per million (ppm), 10\% at 450 ppm (slow growth), 47\% at 550 ppm (moderate growth), and 37\% at 650 ppm (rapid growth). What are the mean and standard deviation of the carbon dioxide atmosphere (in ppm) for these trees in ppm? 
+
+```{r, echo=TRUE}
+# minimal p=6% 350ppm
+# slow p=10% 450ppm
+# moderate p=47% 550ppm
+# rapid p=37% 650ppm
+## What are the mean and standard deviation of the carbon dioxide atmosphere for these trees in ppm? 
+rapid <- 650
+moderate <- 550
+slow <- 450
+minimal <- 350
+
+## Mean calculation
+# 650 + 550 + 450 + 350 = 2000
+# 2000 / 4 = 500
+
+# create a vector
+mean_vector <- c(rapid, moderate, slow, minimal)
+
+# calculate and print the mean
+mean_value <- mean(mean_vector)
+# print(sprintf("The mean is %sppm", mean_value))
+
+
+
+## Standard Deviation calculation
+# 1. find the mean  = 500
+
+# 2. subtract the mean from all the values
+  # 650 - 500 = 150
+  # 550 - 500 = 50 
+  # 450 - 500 = -50
+  # 350 - 500 = -150
+a = rapid - mean_value
+b = moderate - mean_value
+c = slow - mean_value
+d = minimal - mean_value
+
+# 3. Square the results
+  # 150 * 150 = 22500
+  # 50 * 50 = 2500
+  # (-50) * (-50) = 2500
+  # (-150) * (-150) = 22500
+a_2 = a * a
+b_2 = b * b
+c_2 = c * c
+d_2 = d * d
+
+my_variance_vector <- c(a_2, b_2, c_2, d_2)
+# print(my_variance_vector)
+
+# 4. Find the mean of the squared deviations (the variance)
+my_variance_mean <- mean(my_variance_vector)
+# print(my_variance_mean)
+
+standard_deviation <- sqrt(my_variance_mean)
+# print(standard_deviation)
+
+
+
+print("***** Final result *****")
+print(sprintf("The Mean is %sppm.", mean_value))
+print(sprintf("Standard Deviation is %.1fppm.", + standard_deviation))
+```
+
+2. Suppose that in the U.S. in 2011, 70% of new start-ups failed in their first year. If there were 50 start-ups in the DMV area in 2011, what is the probability that 35 or more failed? What assumption did you need to make about the DMV?
+
+```{r, echo=TRUE}
+
+```
+
+3. A research team has developed a face recognition device to match photos in a database. From laboratory tests, the recognition accuracy is 92% and trials are assumed to be independent. 
+
+- If the research team continues to run laboratory tests, what is the mean number of trials until failure? 
+
+- What is the probability that the first failure occurs on the tenth trial? 
+
+- To improve the recognition algorithm, a chief engineer decides to collect 10 failures. How many trials are expected to be needed? 
+
+```{r, echo=TRUE}
+
+```
+
+4. You roll a die until obtaining two consecutive numbers that match. What it is the probability that it takes exactly $x$ rolls to do this, for $x$ an integer greater than 1?
+```{r, echo=TRUE}
+
+```
+
+
+5. The MIT-BIT arrhythmia database contains 48 heart signal recordings with 22 and 26 from female and male patients, respectively. For a classification task, an analyst randomly selects 36 records for predictive model training and keeps the other 12 records for testing the model performance. 
+
+-	What is the expected number of female patient recordings selected for training?
+
+-	What is the probability that at least three male patient recordings are selected for training? 
+
+-	What is the probability that the same number of male and female patients are used for testing the model performance? 
+
+6.	An engineer is participating in a research project on the title patterns of junk emails. The number of junk emails which arrive in an individual’s account every hour follows a Poisson distribution with a mean of 1.2.
+
+-	What is the expected number of junk emails that an individual receives in an 8 hour day? 
+
+-	What is the probability that an individual receives more than two junk emails for the next three hours? 
+
+-	What is the probability that an individual receives no junk email for two hours? 
+
+
+7. Consider a random variable $X$ with probability density function $f(x) = \theta x^{\theta-1}$ for $0<x<1$, where $\theta>0$ is the parameter that controls the pdf.
+
+- Show that $f(x)$ is a valid pdf
+
+- Plot the pdf for $\theta \in \{1/3,1/2,1,2,3\}$. Describe how the distribution changes for different values of $\theta$.
+
+- Find a general expression for the expected value and variance of $X$.
+
+- Find a general expression for the cumulative distribution function (cdf)
+
+8. Web crawlers need to estimate the frequency of changes to Web sites to maintain a current index for Web searches. Assume that the changes to a Web site follow a Poisson process with a mean of 6 days. Let a random variable $X$ denote the time (in days) until the next change.
+
+- What is the probability that the next change occurs in less than 4.5 days?
+
+- What is the probability that the time until the next change is greater 9.5 days?
+
+- What is the time of the next change that is exceeded with probability 90%?

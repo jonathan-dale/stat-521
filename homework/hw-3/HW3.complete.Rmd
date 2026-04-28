@@ -1,0 +1,530 @@
+---
+title: "Homework 3"
+output:
+  html_document:
+    df_print: paged
+    code_folding: hide
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align="center", message=FALSE, warning=FALSE)
+```
+
+**This homework is due on Wednesday, October 22 2025 by 11:59pm. Please show all your work and justify your answers. Use R to compute the probabilities.**
+
+1. Trees are subjected to different levels of carbon dioxide atmosphere with 6\% of them in a minimal growth condition at 350 parts per million (ppm), 10\% at 450 ppm (slow growth), 47\% at 550 ppm (moderate growth), and 37\% at 650 ppm (rapid growth). What are the mean and standard deviation of the carbon dioxide atmosphere (in ppm) for these trees in ppm? 
+
+Solution: 
+  mean = 565ppm
+  standard deviation = 71.80703
+
+```{r, echo=TRUE}
+# minimal p=6% 350ppm
+# slow p=10% 450ppm
+# moderate p=47% 550ppm
+# rapid p=37% 650ppm
+## What are the mean and standard deviation of the carbon dioxide atmosphere for these trees in ppm? 
+rapid <- 650
+moderate <- 550
+slow <- 450
+minimal <- 350
+
+prapid <- .37
+pmoderate <- .47
+pslow <- .1
+pminimal <- .06
+
+
+# Find the weighted mean
+mean_calc <- (rapid * prapid + moderate * pmoderate + slow * pslow + minimal * pminimal) / 4
+
+# create a vector using the weighted values
+growth_rate_vector <- c((rapid * prapid + moderate * pmoderate + slow * pslow + minimal * pminimal))
+
+# calculate and print the mean
+mean_value <- mean(growth_rate_vector)
+print(sprintf("The mean is %sppm", mean_value))
+
+
+## Standard Deviation calculation ##
+# 1. find the mean = 565
+
+# 2. subtract the mean from all the data points (the deviation)
+a = rapid - mean_value
+b = moderate - mean_value
+c = slow - mean_value
+d = minimal - mean_value
+
+# 3. Square the results of each deviation
+a_2 = a * a
+b_2 = b * b
+c_2 = c * c
+d_2 = d * d
+
+
+## Multiply by prob (weights)
+a_3 <- a_2 * prapid
+b_3 <- b_2 * pmoderate
+c_3 <- c_2 * pslow
+d_3 <- d_2 * pminimal
+
+
+
+# # 4. Find the mean of the squared deviations (the variance)
+# Create a variance vector
+my_variance_vector <- c(a_3, b_3, c_3, d_3)
+# print(my_variance_vector)
+
+## sum values in the variance multiply by a factor of (n-1/n)
+variance <- sum(my_variance_vector) * (3/4)
+
+# Take the square root of the variance to find the standard deviation
+standard_deviation <- sqrt(variance)
+print(standard_deviation)
+
+# # Using the DescTools
+# library(DescTools)
+# data <- c(rapid, moderate, slow, minimal)
+# weights <- c(prapid, pmoderate, pslow, pminimal)
+# SD(data, weights = weights)
+# #####################################################################################################
+# # Create a function to calculate the weighted standard deviation
+# 
+# weighted_sd <- function(x, weights) {
+#   weighted_mean <- sum(x * weights) / sum(weights)
+#   weighted_variance <- sum(weights * (x - weighted_mean)^2) / (sum(weights) - 1) # Using n-1 for sample SD
+#   sqrt(weighted_variance)
+# }
+# 
+# data <- c(rapid, moderate, slow, minimal)
+# weights <- c(prapid, pmoderate, pslow, pminimal)
+# # data <- c(10, 12, 15, 18, 20)
+# # weights <- c(1, 2, 1.5, 3, 0.5)
+# my_weighted_sd_function <- weighted_sd(data, weights)
+# print("######")
+# print(my_weighted_sd_function)
+# 
+# #####################################################################################################
+```
+
+2. Suppose that in the U.S. in 2011, 70% of new start-ups failed in their first year. If there were 50 start-ups in the DMV area in 2011, what is the probability that 35 or more failed? What assumption did you need to make about the DMV?
+
+
+Solution:
+  Assume that the number of start ups in the DMV has the same probability of failure as the rest of the U.S. Using binomial to calculate the individual probabilities of failure/success.
+  
+  Calculate the number of start-ups * probability of failure to find the number of start-ups that should fail is 35.
+    50 * .70 = 35
+  
+  The number of start-ups that succeed can be found using the binomal and shows that:
+  probability of success is 0.1223469
+  probability of failure is 5.346347e-09
+
+
+```{r, echo=TRUE}
+# 70% failure rate 
+# p(fail) = .7
+# p(success) --> 1 - p(fail) = 1 - .7 = .3
+# n = 50
+
+p_fail <- .7
+p_pass <- 1 - p_fail # == .3
+num_startups <- 50
+
+# Use binomal
+# P(X = x) = nCx*p^x(1-p)^(n-x)
+# Let X be the random variable that assigns failure
+#dbinom(x, size, prob, log = FALSE)
+p_35_or_more_fail <- dbinom(35, 50, .7)
+print(p_35_or_more_fail)
+p_35_or_more_success <- dbinom(35, 50, .3)
+print(p_35_or_more_success)
+
+
+```
+
+
+
+3. A research team has developed a face recognition device to match photos in a database. From laboratory tests, the recognition accuracy is 92% and trials are assumed to be independent. 
+
+- If the research team continues to run laboratory tests, what is the mean number of trials until failure? 
+
+Solution:
+  Mean # trials until failure? 
+    1 / q = 1 / (1 - p_success) = 1 / (1 - .92) = 1 / .08 = 12.5
+    
+```{r, echo=TRUE}
+## accuracy is 92% assume independence. The mean number of trials follows a geometric distribution, a probability distribution that models the number of trials in a series of independent trials where each trial only has 2 outcomes, success or failure.  
+# First determine the probability of success (given in the question) and the probability of failure 'q'
+p_success <- .92
+p_fail <- 1 - p_success # == .08
+
+# calculate the mean number of trials until failure. The mean of a geometric distribution is 1/q 
+trials_until_failure <- 1 / p_fail
+print(trials_until_failure)
+```
+
+- What is the probability that the first failure occurs on the tenth trial? 
+
+Solution:
+  Prob that first failure is on trial number 10?
+    Using the PMF of the geometric distribution:  p * (1 - p)^(n - 1)   where n is the trial number.
+    p * (1 - p)^(n-1) = .08 * (1 - .08)^(10 - 1) = 0.038
+
+```{r echo=TRUE}
+# Load necessary libraries
+library(ggplot2)
+
+# Parameters
+p <- 0.08
+k_values <- 1:10
+
+# Calculate PMF
+pmf_values <- dgeom(k_values - 1, prob = p)
+
+# # Calculate PMF at n = 10
+# pmf_n10 <- dgeom(10, prob = p)
+# print(pmf_n10)
+
+# Create a data frame for plotting
+pmf_data <- data.frame(k = k_values, pmf = pmf_values)
+
+# Plot the PMF
+ggplot(pmf_data, aes(x = k, y = pmf)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  labs(title = "Geometric Distribution PMF (p = 0.92)",
+       x = "Number of Trials (k)",
+       y = "Probability") +
+  theme_minimal()
+```
+
+- To improve the recognition algorithm, a chief engineer decides to collect 10 failures. How many trials are expected to be needed? 
+
+Solution:
+    How many trials until collecting 10 failures?
+    Multiply the mean number of trials until failure by the number of failures we are interested in.
+    12.5 * 10 = 125
+
+```{r, echo=TRUE}
+result <- 12.5 * 10
+print(result)
+```
+
+
+
+4. You roll a die until obtaining two consecutive numbers that match. What it is the probability that it takes exactly $x$ rolls to do this, for $x$ an integer greater than 1?
+
+
+Solution:
+Since the rolls are independent, we can multiple the probabilities if the following conditions are met
+  1. the first roll is any number
+  2. the second roll is not the first roll
+  3. the third roll is not the second roll
+  4. the (x-2)'th roll dose not match the (x-1)'th roll
+  4. this pattern continues until the last roll, x, must match the previous roll, x - 1
+  
+  roll 1 has probability of being any of 6 values with probability 1/6 each, (1/6)^6 = 1
+  roll 2, 3, 4.....x-2, x-1 can take any value except the previous one; since their are 6 outcomes but only 5 possible that do not match the previous roll the probabilities are all 5/6.
+  
+  P(x) = P(1) * P(2) * P(3) * P(x-2) * P(x-1) * P(x)
+  P(x) = 1 * 5/6 * 5/6 * 5/6......*1/6
+  P(x) = 1 * (5/6)^(x-2) * (1/6)
+  
+  
+```{r, echo=TRUE}
+prob <- 1/6
+
+two_rolls_until_same_value <- function() {
+  rolls <- sample(1:6, 1, replace = TRUE)
+  num_rolls <- 1
+  
+  repeat {
+    num_rolls <- num_rolls + 1
+    rolls[num_rolls] <- sample(1:6, 1, replace = TRUE)
+    
+    if (rolls[num_rolls] == rolls[num_rolls - 1]) {
+      return (num_rolls)
+    }
+  }
+}
+
+# two_rolls_until_same_value()
+
+## Run this simulation a large number of times, 1000
+num_simulations <- 1000
+results <- replicate(num_simulations, two_rolls_until_same_value)
+# roll_counts <- table(results)
+
+```
+
+
+
+
+
+5. The MIT-BIT arrhythmia database contains 48 heart signal recordings with 22 and 26 from female and male patients, respectively. For a classification task, an analyst randomly selects 36 records for predictive model training and keeps the other 12 records for testing the model performance. 
+
+-	What is the expected number of female patient recordings selected for training?
+
+Solution:
+  This follows a hypergeometric distribution, where the subjects are drawn with out replacement.
+  What is the expected number of female patient recordings selected for training?
+  E = n * K/N, where n = size of sample drawn, K = total number in the population, and N is the size of the population
+  E = 36 * 22 / 48 == 16.5.
+
+```{r echo=TRUE}
+# What is the expected number of female patient recordings selected for training? 
+n <- 36 # sample size drawn out of the population
+K <- 22 # total female population
+N <- 48 # total population size
+expected_female <- n * (K/N)
+a.message = "expected number of female patients recordings selected for training is:"
+paste(a.message, expected_female)
+```
+
+
+
+-	What is the probability that at least three male patient recordings are selected for training? 
+
+Solution:
+Since the sample size is 36, and no more than 22 patients are female (due to the total female population is 22) then; the probability that at least 3 male patient recordings are selected for training is 1. In the case where every female patient is chosen for training, the least number of males that can be chosen is calculated below:
+      sample size - female patients = minimum males 
+      36 - 22 = 14
+    Since 14 is the smallest number of males that can be selected, it is certian (e.g., probability = 1) that at least 3 males will be in the training sample. 
+
+```{r echo=TRUE}
+# What is the probability that at least three male patient recordings are selected for training? 
+  # rhyper(nn, m, n, k)
+  # nn - number of random values to generate.
+  # m - number of successes (males)
+  # n - number of failures (females)
+  # k - sample size (48)
+  nn <- 36
+  m <- 26
+  n <- 22
+  k <- 48 # population size
+  rhyper(nn = nn, m = m, n = n, k = k)
+
+```
+
+
+-	What is the probability that the same number of male and female patients are used for testing the model performance?
+
+Solution:
+    This is possible since the sample size is 36 which is evenly divisible number. 
+    When this occurs it forces the number of males and females to equal 18 each.
+    This has a probability of 0.16%
+  
+
+```{r echo=TRUE}
+# What is the probability that the same number of male and female patients are used for testing the model performance? 
+  # Use the choose function...choose(n, r) where num_males = num_females = 18. 
+  # ((22C18) * (26C18)) / (48C36)
+  num_males <- 26
+  num_females <- 22
+  males_selected <- 18
+  females_selected <- 18
+  sample_size <- 36
+  population_size <- 48
+  
+  find_males <- choose(num_males, males_selected) 
+  find_females <- choose(num_females, females_selected)
+  total_sample_size <- choose(population_size, sample_size)
+  
+  prob_num_males_equal_num_females <- (find_males * find_females) / total_sample_size
+  
+  b.message <- "The probability that the same number of male and female patients are used for testing the model performance is...."
+  paste(b.message, prob_num_males_equal_num_females)
+```
+
+
+
+
+
+
+
+6.	An engineer is participating in a research project on the title patterns of junk emails. The number of junk emails which arrive in an individual’s account every hour follows a Poisson distribution with a mean of 1.2.
+
+-	What is the expected number of junk emails that an individual receives in an 8 hour day? 
+  
+Solution: The expected value for a Poisson distribution is the same as its mean, 1.2.
+
+-	What is the probability that an individual receives more than two junk emails for the next three hours? 
+
+Solution: 0.2168598
+  
+```{r echo=TRUE}
+lambda <- 1.2
+num_evnets <- 2
+dpois(x = num_evnets, lambda = lambda)
+```
+
+
+-	What is the probability that an individual receives no junk email for two hours? 
+
+Solution: 0.6023884
+  
+```{r echo=TRUE}
+lambda <- 1.2
+num_events <- 0
+no_events_in_1_hour <- dpois(x = num_events, lambda = lambda)
+print(no_events_in_2_hours <- no_events_in_1_hour * 2)
+```
+
+
+
+
+
+7. Consider a random variable $X$ with probability density function $f(x) = \theta x^{\theta-1}$ for $0<x<1$, where $\theta>0$ is the parameter that controls the pdf.
+
+- Show that $f(x)$ is a valid pdf
+
+Solution:
+
+  Both of the following conditions must be met for the pdf to be valid:
+    1. The f(x) must be >= 0 for all values in its support (its range) since probabilities can not be negative.
+        Given that theta > 0, the term x^(theta - 1) will be positive for all x in the interval (0,1).
+    2. The integral of f(x) dx = 1 over the entire domain.
+
+  Since both conditions are met 
+    - the function is non-negative
+    - its integral over the interval (0,1) is equal to 1
+  Then the pdf `f(x)=theta x^{\theta -1}` is a valid probability density function for `(0<x<1)` and `(theta >0)`.
+
+
+
+- Plot the pdf for $\theta \in \{1/3,1/2,1,2,3\}$. Describe how the distribution changes for different values of $\theta$.
+
+Solution:
+
+  First observation is that the function is non-negative over all values of x given that theta > 0.
+  Next we can see sharp increase of f(x) just after x = 0, to almost 1 but not quite.
+  Then the function decreases with a sharp direction change immediately before f(x) = 1.
+  Right before x = 1 we see a sharp rapid decline of f(x) to 0.
+  The function f(x) = 0 for all values of x => 1 and x <= 0.
+
+
+```{r echo=TRUE}
+library(ggplot2)
+
+
+# Define the PDF
+f <- function(x) {
+  ifelse((0<x & x<1), theta * x^(theta - 1), 0)
+}
+
+# Define the range
+theta <- c(1/3, 1/2, 1, 2, 3)
+
+
+# Using these values below for theta we see the distribution has a totally different shape.
+theta_1 <- seq(-.001, 1.5, length.out = 1000)
+theta_2 <- seq(-1, 2, length.out = 1000)
+
+# Plot and inspect the function
+plot(theta, f(theta), type = "l", 
+     xlab = "x", ylab = "f(theta)",
+     main = "Plot of the PDF")
+
+plot(theta_1, f(theta_1), type = "l",
+     xlab = "x", ylab = "f(theta_1)",
+     main = "Plot of f(x) over theta_1 from -.001 to 1.5")
+
+plot(theta_2, f(theta_2), type = "l",
+     xlab = "x", ylab = "f(theta_2)",
+     main = "Plot of f(x) over theta_2 from -2 to 2 with 1000 points")
+```
+
+
+
+- Find a general expression for the expected value and variance of $X$.
+
+Solution: 
+  The expected value of f(x) = theta / (theta + 1) = x*f(x) = 0.4839866
+
+```{r echo=TRUE}
+
+# Define the function
+f <- function(x) {
+  theta * x^(theta - 1)
+}
+
+g <- function(x) {
+  x*theta * x^(theta - 1)
+}
+
+integrate(g, lower = 0, upper = 1)
+
+```
+
+
+
+- Find a general expression for the cumulative distribution function (cdf)
+
+Solution: 
+  Since a pfd is the derivative of the cdf, the cdf of a given pdf is found by integrating the pdf (assuming absolute continuity)
+
+```{r echo=TRUE}
+
+# Define the function
+f <- function(x) {
+  theta * x^(theta - 1)
+}
+
+# integrate(f, lower = 0, upper = 1)
+
+
+```
+
+  
+
+
+
+
+8. Web crawlers need to estimate the frequency of changes to Web sites to maintain a current index for Web searches. Assume that the changes to a Web site follow a Poisson process with a mean of 6 days. Let a random variable $X$ denote the time (in days) until the next change.
+
+
+
+`I am having some trouble with the R code and ran out of time working on this problem.  `
+`I worked out the solutions on paper with the correct results and will attach it with the html file in canvas.  `
+
+
+- What is the probability that the next change occurs in less than 4.5 days?
+
+Solution: .5267
+
+```{r echo=TRUE}
+# adjust lambda from 1 event in 6 days
+l <- 1/6
+k <- 4.5
+new_l <- l * k
+ppois(new_l, lambda = l)
+```
+
+
+- What is the probability that the time until the next change is greater 9.5 days?
+
+Solution: .795
+
+```{r echo=TRUE}
+# adjust lambda from 1 event in 6 days
+l <- 1/6
+t <- 9.5
+f <- function(t) {
+  l * exp(-l*t)
+}
+p_time <- integrate(f, lower = 0, upper = Inf)
+print(p_time)
+```
+
+
+
+- What is the time of the next change that is exceeded with probability 90%?
+
+Solution:
+
+  13.815 
+
+
+
+

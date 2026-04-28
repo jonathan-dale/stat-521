@@ -1,0 +1,613 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={The normal distribution},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{The normal distribution}
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+\maketitle
+
+In this lab, you'll investigate the probability distribution that is
+most central to statistics: the normal distribution. If you are
+confident that your data are nearly normal, that opens the door to many
+powerful statistical methods. Here we'll use the graphical tools of R to
+assess the normality of our data and also learn how to generate random
+numbers from a normal distribution.
+
+\subsection{Getting Started}\label{getting-started}
+
+\subsubsection{The data}\label{the-data}
+
+This week you'll be working with fast food data. This data set contains
+data on 515 menu items from some of the most popular fast food
+restaurants worldwide. Let's take a quick peek at the first few rows of
+the data.
+
+Either you can use \texttt{glimpse} like before, or \texttt{head} to do
+this.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(openintro)}
+\FunctionTok{glimpse}\NormalTok{(fastfood)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rows: 515
+## Columns: 17
+## $ restaurant  <chr> "Mcdonalds", "Mcdonalds", "Mcdonalds", "Mcdonalds", "Mcdon~
+## $ item        <chr> "Artisan Grilled Chicken Sandwich", "Single Bacon Smokehou~
+## $ calories    <dbl> 380, 840, 1130, 750, 920, 540, 300, 510, 430, 770, 380, 62~
+## $ cal_fat     <dbl> 60, 410, 600, 280, 410, 250, 100, 210, 190, 400, 170, 300,~
+## $ total_fat   <dbl> 7, 45, 67, 31, 45, 28, 12, 24, 21, 45, 18, 34, 20, 34, 8, ~
+## $ sat_fat     <dbl> 2.0, 17.0, 27.0, 10.0, 12.0, 10.0, 5.0, 4.0, 11.0, 21.0, 4~
+## $ trans_fat   <dbl> 0.0, 1.5, 3.0, 0.5, 0.5, 1.0, 0.5, 0.0, 1.0, 2.5, 0.0, 1.5~
+## $ cholesterol <dbl> 95, 130, 220, 155, 120, 80, 40, 65, 85, 175, 40, 95, 125, ~
+## $ sodium      <dbl> 1110, 1580, 1920, 1940, 1980, 950, 680, 1040, 1040, 1290, ~
+## $ total_carb  <dbl> 44, 62, 63, 62, 81, 46, 33, 49, 35, 42, 38, 48, 48, 67, 31~
+## $ fiber       <dbl> 3, 2, 3, 2, 4, 3, 2, 3, 2, 3, 2, 3, 3, 5, 2, 2, 3, 3, 5, 2~
+## $ sugar       <dbl> 11, 18, 18, 18, 18, 9, 7, 6, 7, 10, 5, 11, 11, 11, 6, 3, 1~
+## $ protein     <dbl> 37, 46, 70, 55, 46, 25, 15, 25, 25, 51, 15, 32, 42, 33, 13~
+## $ vit_a       <dbl> 4, 6, 10, 6, 6, 10, 10, 0, 20, 20, 2, 10, 10, 10, 2, 4, 6,~
+## $ vit_c       <dbl> 20, 20, 20, 25, 20, 2, 2, 4, 4, 6, 0, 10, 20, 15, 2, 6, 15~
+## $ calcium     <dbl> 20, 20, 50, 20, 20, 15, 10, 2, 15, 20, 15, 35, 35, 35, 4, ~
+## $ salad       <chr> "Other", "Other", "Other", "Other", "Other", "Other", "Oth~
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{table}\NormalTok{(fastfood}\SpecialCharTok{$}\NormalTok{restaurant)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##       Arbys Burger King Chick Fil-A Dairy Queen   Mcdonalds       Sonic 
+##          55          70          27          42          57          53 
+##      Subway   Taco Bell 
+##          96         115
+\end{verbatim}
+
+You'll see that for every observation there are 17 measurements, many of
+which are nutritional facts.
+
+You'll be focusing on just three columns to get started: restaurant,
+calories, calories from fat.
+
+Let's first focus on just products from McDonalds and Dairy Queen.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mcdonalds }\OtherTok{\textless{}{-}}\NormalTok{ fastfood }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(restaurant }\SpecialCharTok{==} \StringTok{"Mcdonalds"}\NormalTok{)}
+\NormalTok{dairy\_queen }\OtherTok{\textless{}{-}}\NormalTok{ fastfood }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(restaurant }\SpecialCharTok{==} \StringTok{"Dairy Queen"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Make a plot (or plots) to visualize the distributions of the amount of
+  calories from fat of the options from these two restaurants. How do
+  their centers, shapes, and spreads compare?
+\end{enumerate}
+
+Solution:\\
+Fat calories in the Mcdonalds food seems to reach higher proportions of
+fat with some samples reaching above 1000 fat calories. In the DQ
+samples we see a max of around 700 - 750. Both visuals display right
+skewed data with a mean around 200.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(mcdonalds, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ cal\_fat)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{binwidth =} \DecValTok{100}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"Mcdonalds fat calories"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.7\linewidth]{Lab4_normal_distribution_files/figure-latex/unnamed-chunk-2-1}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(dairy\_queen, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ cal\_fat)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{binwidth =} \DecValTok{100}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"Dairy Queen fat calories"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.7\linewidth]{Lab4_normal_distribution_files/figure-latex/unnamed-chunk-2-2}
+
+\subsection{The normal distribution}\label{the-normal-distribution}
+
+In your description of the distributions, did you use words like
+\emph{bell-shaped} or \emph{normal}? It's tempting to say so when faced
+with a unimodal symmetric distribution.
+
+To see how accurate that description is, you can plot a normal
+distribution curve on top of a histogram to see how closely the data
+follow a normal distribution. This normal curve should have the same
+mean and standard deviation as the data. You'll be focusing on calories
+from fat from Dairy Queen products, so let's store them as a separate
+object and then calculate some statistics that will be referenced later.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dqmean }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(dairy\_queen}\SpecialCharTok{$}\NormalTok{cal\_fat)}
+\NormalTok{dqsd   }\OtherTok{\textless{}{-}} \FunctionTok{sd}\NormalTok{(dairy\_queen}\SpecialCharTok{$}\NormalTok{cal\_fat)}
+\end{Highlighting}
+\end{Shaded}
+
+Next, you make a density histogram to use as the backdrop and use the
+\texttt{lines} function to overlay a normal probability curve. The
+difference between a frequency histogram and a density histogram is that
+while in a frequency histogram the \emph{heights} of the bars add up to
+the total number of observations, in a density histogram the
+\emph{areas} of the bars add up to 1. The area of each bar can be
+calculated as simply the height \emph{times} the width of the bar. Using
+a density histogram allows us to properly overlay a normal distribution
+curve over the histogram since the curve is a normal probability density
+function that also has area under the curve of 1. Frequency and density
+histograms both display the same exact shape; they only differ in their
+y-axis. You can verify this by comparing the frequency histogram you
+constructed earlier and the density histogram created by the commands
+below.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ dairy\_queen, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ cal\_fat)) }\SpecialCharTok{+}
+        \FunctionTok{geom\_blank}\NormalTok{() }\SpecialCharTok{+}
+        \FunctionTok{geom\_histogram}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =} \FunctionTok{after\_stat}\NormalTok{(density))) }\SpecialCharTok{+}
+        \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dnorm, }\AttributeTok{args =} \FunctionTok{c}\NormalTok{(}\AttributeTok{mean =}\NormalTok{ dqmean, }\AttributeTok{sd =}\NormalTok{ dqsd), }\AttributeTok{col =} \StringTok{"tomato"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.7\linewidth]{Lab4_normal_distribution_files/figure-latex/hist-height-1}
+
+After initializing a blank plot with \texttt{geom\_blank()}, the
+\texttt{ggplot2} package (within the \texttt{tidyverse}) allows us to
+add additional layers. The first layer is a density histogram. The
+second layer is a statistical function -- the density of the normal
+curve, \texttt{dnorm}. We specify that we want the curve to have the
+same mean and standard deviation as the column of female heights. The
+argument \texttt{col} simply sets the color for the line to be drawn. If
+we left it out, the line would be drawn in black.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Based on the this plot, does it appear that the data follow a nearly
+  normal distribution?
+\end{enumerate}
+
+\textbf{Response} Yes, with the exception of a few outliers in the
+higher end, the data seems to follow nearly normal distribution.
+
+\subsection{Evaluating the normal
+distribution}\label{evaluating-the-normal-distribution}
+
+Eyeballing the shape of the histogram is one way to determine if the
+data appear to be nearly normally distributed, but it can be frustrating
+to decide just how close the histogram is to the curve. An alternative
+approach involves constructing a normal probability plot, also called a
+normal Q-Q plot for ``quantile-quantile''.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Q–Q plot for checking normality}
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ dairy\_queen, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{sample =}\NormalTok{ cal\_fat)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_qq}\NormalTok{() }\SpecialCharTok{+}                      \CommentTok{\# plots sample quantiles (points)}
+  \FunctionTok{geom\_qq\_line}\NormalTok{() }\SpecialCharTok{+}                 \CommentTok{\# adds the 45° reference line}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Q–Q Plot of Calories from Fat"}\NormalTok{,}
+    \AttributeTok{x =} \StringTok{"Theoretical Quantiles (Normal)"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Sample Quantiles"}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.7\linewidth]{Lab4_normal_distribution_files/figure-latex/qq-1}
+
+This time, you can use the \texttt{geom\_line()} layer, while specifying
+that you will be creating a Q-Q plot with the \texttt{stat} argument.
+It's important to note that here, instead of using \texttt{x} in
+\texttt{aes()}, you need to use \texttt{sample}.
+
+The x-axis values correspond to the quantiles of a theoretically normal
+curve with mean 0 and standard deviation 1 (i.e., the standard normal
+distribution). The y-axis values correspond to the quantiles of the
+original unstandardized sample data. However, even if we were to
+standardize the sample data values, the Q-Q plot would look identical. A
+data set that is nearly normal will result in a probability plot where
+the points closely follow a diagonal line. Any deviations from normality
+leads to deviations of these points from that line.
+
+The plot for Dairy Queen's calories from fat shows points that tend to
+follow the line but with some errant points towards the upper tail.
+You're left with the same problem that we encountered with the histogram
+above: how close is close enough?
+
+A useful way to address this question is to rephrase it as: what do
+probability plots look like for data that I \emph{know} came from a
+normal distribution? We can answer this by simulating data from a normal
+distribution using \texttt{rnorm}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sim\_norm }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n =} \FunctionTok{nrow}\NormalTok{(dairy\_queen), }\AttributeTok{mean =}\NormalTok{ dqmean, }\AttributeTok{sd =}\NormalTok{ dqsd)}
+\end{Highlighting}
+\end{Shaded}
+
+The first argument indicates how many numbers you'd like to generate,
+which we specify to be the same number of menu items in the
+\texttt{dairy\_queen} data set using the \texttt{nrow()} function. The
+last two arguments determine the mean and standard deviation of the
+normal distribution from which the simulated sample will be generated.
+You can take a look at the shape of our simulated data set,
+\texttt{sim\_norm}, as well as its normal probability plot.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Make a normal probability plot of \texttt{sim\_norm}. Do all of the
+  points fall on the line? How does this plot compare to the probability
+  plot for the real data? (Since \texttt{sim\_norm} is not a dataframe,
+  it can be put directly into the \texttt{sample} argument and the
+  \texttt{data} argument can be dropped.)
+\end{enumerate}
+
+\textbf{Solution} Plotting the sim\_norm data shows data similiar to the
+real data but seems to be skewed to the right.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =} \ConstantTok{NULL}\NormalTok{, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{sample =}\NormalTok{ sim\_norm)) }\SpecialCharTok{+}
+\FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{stat =} \StringTok{"qq"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.7\linewidth]{Lab4_normal_distribution_files/figure-latex/unnamed-chunk-3-1}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{qqnorm}\NormalTok{(sim\_norm)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.7\linewidth]{Lab4_normal_distribution_files/figure-latex/unnamed-chunk-4-1}
+
+Even better than comparing the original plot to a single plot generated
+from a normal distribution is to compare it to many more plots using the
+following function. It shows the Q-Q plot corresponding to the original
+data in the top left corner, and the Q-Q plots of 8 different simulated
+normal data.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# qqnormsim function definition}
+\NormalTok{qqnormsim }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(sample, data) \{}
+\NormalTok{  y }\OtherTok{\textless{}{-}} \FunctionTok{eval}\NormalTok{(}\FunctionTok{substitute}\NormalTok{(sample), data)}
+\NormalTok{  simnorm }\OtherTok{\textless{}{-}}\NormalTok{ stats}\SpecialCharTok{::}\FunctionTok{rnorm}\NormalTok{(}
+    \AttributeTok{n =} \FunctionTok{length}\NormalTok{(y) }\SpecialCharTok{*} \DecValTok{8}\NormalTok{,}
+    \AttributeTok{mean =} \FunctionTok{mean}\NormalTok{(y),}
+    \AttributeTok{sd =}\NormalTok{ stats}\SpecialCharTok{::}\FunctionTok{sd}\NormalTok{(y)}
+\NormalTok{  )}
+  
+\NormalTok{  df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{x =} \FunctionTok{c}\NormalTok{(y, simnorm),}
+    \AttributeTok{plotnum =} \FunctionTok{rep}\NormalTok{(}
+      \FunctionTok{c}\NormalTok{(}\StringTok{"data"}\NormalTok{, }\StringTok{"sim 1"}\NormalTok{, }\StringTok{"sim 2"}\NormalTok{, }\StringTok{"sim 3"}\NormalTok{, }\StringTok{"sim 4"}\NormalTok{, }
+        \StringTok{"sim 5"}\NormalTok{, }\StringTok{"sim 6"}\NormalTok{, }\StringTok{"sim 7"}\NormalTok{, }\StringTok{"sim 8"}\NormalTok{),}
+      \AttributeTok{each =} \FunctionTok{length}\NormalTok{(y)}
+\NormalTok{    )}
+\NormalTok{  )}
+  
+\NormalTok{  ggplot2}\SpecialCharTok{::}\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ df, ggplot2}\SpecialCharTok{::}\FunctionTok{aes\_string}\NormalTok{(}\AttributeTok{sample =} \StringTok{"x"}\NormalTok{)) }\SpecialCharTok{+}
+\NormalTok{    ggplot2}\SpecialCharTok{::}\FunctionTok{stat\_qq}\NormalTok{() }\SpecialCharTok{+}
+\NormalTok{    ggplot2}\SpecialCharTok{::}\FunctionTok{geom\_qq\_line}\NormalTok{(}\AttributeTok{color =} \StringTok{"darkred"}\NormalTok{, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{) }\SpecialCharTok{+}  \CommentTok{\# added reference line}
+\NormalTok{    ggplot2}\SpecialCharTok{::}\FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{plotnum) }\SpecialCharTok{+}
+\NormalTok{    ggplot2}\SpecialCharTok{::}\FunctionTok{labs}\NormalTok{(}
+      \AttributeTok{title =} \StringTok{"Q–Q Plots: Data vs. Simulated Normal Samples"}\NormalTok{,}
+      \AttributeTok{x =} \StringTok{"Theoretical Quantiles (Normal)"}\NormalTok{,}
+      \AttributeTok{y =} \StringTok{"Sample Quantiles"}
+\NormalTok{    ) }
+\NormalTok{\}}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{21}\NormalTok{)}
+\FunctionTok{qqnormsim}\NormalTok{(}\AttributeTok{sample =}\NormalTok{ cal\_fat, }\AttributeTok{data =}\NormalTok{ dairy\_queen)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.7\linewidth]{Lab4_normal_distribution_files/figure-latex/qqnormsim-1}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Does the normal probability plot for the calories from fat look
+  similar to the plots created for the simulated data? That is, do the
+  plots provide evidence that the calories from fat are nearly normal?
+\end{enumerate}
+
+\textbf{Solution}\\
+Yes the simulated normal probability plots looks very much like the data
+plot for fat calories.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  Using the same technique, determine whether or not the calories from
+  McDonald's menu appear to come from a normal distribution.
+\end{enumerate}
+
+\textbf{Solution}\\
+We can see that the data for Mcdonalds is close to the simulated normal
+distributions however it begins to diverge towards the right end going
+higher due to the samples containing larger protoin of fat calories.
+This is showing that the Mcdonalds data is right skewed.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{qqnormsim}\NormalTok{(}\AttributeTok{sample =}\NormalTok{ cal\_fat, }\AttributeTok{data =}\NormalTok{ mcdonalds)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.7\linewidth]{Lab4_normal_distribution_files/figure-latex/unnamed-chunk-5-1}
+
+\subsection{Normal probabilities}\label{normal-probabilities}
+
+Okay, so now you have a slew of tools to judge whether or not a variable
+is normally distributed. Why should you care?
+
+It turns out that statisticians know a lot about the normal
+distribution. Once you decide that a random variable is approximately
+normal, you can answer all sorts of questions about that variable
+related to probability. Take, for example, the question of, ``What is
+the probability that a randomly chosen Dairy Queen product has more than
+600 calories from fat?''
+
+If we assume that the calories from fat from Dairy Queen's menu are
+normally distributed (a very close approximation is also okay), we can
+find this probability by calculating a Z score and consulting a Z table
+(also called a normal probability table). In R, this is done in one step
+with the function \texttt{pnorm()}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{pnorm}\NormalTok{(}\AttributeTok{q =} \DecValTok{600}\NormalTok{, }\AttributeTok{mean =}\NormalTok{ dqmean, }\AttributeTok{sd =}\NormalTok{ dqsd)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.01501523
+\end{verbatim}
+
+Note that the function \texttt{pnorm()} gives the area under the normal
+curve below a given value, \texttt{q}, with a given mean and standard
+deviation. Since we're interested in the probability that a Dairy Queen
+item has more than 600 calories from fat, we have to take one minus that
+probability.
+
+Assuming a normal distribution has allowed us to calculate a theoretical
+probability. If we want to calculate the probability empirically, we
+simply need to determine how many observations fall above 600 then
+divide this number by the total sample size.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dairy\_queen }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(cal\_fat }\SpecialCharTok{\textgreater{}} \DecValTok{600}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{percent =} \FunctionTok{n}\NormalTok{() }\SpecialCharTok{/} \FunctionTok{nrow}\NormalTok{(dairy\_queen))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 1
+##   percent
+##     <dbl>
+## 1  0.0476
+\end{verbatim}
+
+Although the probabilities are not exactly the same, they are reasonably
+close. The closer that your distribution is to being normal, the more
+accurate the theoretical probabilities will be.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{5}
+\tightlist
+\item
+  Write out two probability questions that you would like to answer
+  about any of the restaurants in this dataset. Calculate those
+  probabilities using both the theoretical normal distribution as well
+  as the empirical distribution (four probabilities in all). Which one
+  had a closer agreement between the two methods?
+\end{enumerate}
+
+\textbf{Solution} First lets calculate the probability that a randomly
+chosen item from Mcdonalds has more than 500 calories.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mcdonalds\_mean }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(mcdonalds}\SpecialCharTok{$}\NormalTok{cal\_fat)}
+\NormalTok{mcdonalds\_sd   }\OtherTok{\textless{}{-}} \FunctionTok{sd}\NormalTok{(mcdonalds}\SpecialCharTok{$}\NormalTok{cal\_fat)}
+\FunctionTok{pnorm}\NormalTok{(}\DecValTok{500}\NormalTok{, mcdonalds\_mean, mcdonalds\_sd)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.834105
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{More Practice}\label{more-practice}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{6}
+\tightlist
+\item
+  Now let's consider some of the other variables in the dataset. Out of
+  all the different restaurants, which ones' distribution is the closest
+  to normal for sodium?
+\end{enumerate}
+
+\textbf{Solution} Burger King seems to have the closest distribution to
+normal for sodium.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{normal\_sodium }\OtherTok{\textless{}{-}}\NormalTok{ fastfood }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(restaurant) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{shapiro\_p\_value =} \FunctionTok{shapiro.test}\NormalTok{(sodium)}\SpecialCharTok{$}\NormalTok{p.value)}
+
+\NormalTok{normal\_restaurants }\OtherTok{\textless{}{-}}\NormalTok{ normal\_sodium }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(shapiro\_p\_value }\SpecialCharTok{\textgreater{}} \FloatTok{0.05}\NormalTok{)}
+
+\FunctionTok{print}\NormalTok{(normal\_restaurants)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 2
+##   restaurant  shapiro_p_value
+##   <chr>                 <dbl>
+## 1 Arbys                 0.199
+## 2 Burger King           0.133
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{7}
+\tightlist
+\item
+  Note that some of the normal probability plots for sodium
+  distributions seem to have a stepwise pattern. why do you think this
+  might be the case?
+\end{enumerate}
+
+\textbf{Solution} The data is likely discrete and not continuous, this
+causes a step like pattern on a normal probability plot.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\pandocbounded{\includegraphics[keepaspectratio]{https://i.creativecommons.org/l/by-sa/4.0/88x31.png}}This
+work is licensed under a Creative Commons Attribution-ShareAlike 4.0
+International License.
+
+\end{document}

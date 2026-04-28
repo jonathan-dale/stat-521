@@ -1,0 +1,356 @@
+---
+title: "Stats 521 Final Project Jonathan Dale"
+output: html_document
+---
+
+Report components:
+(A) Introduction.  
+(B) Descriptive Analysis.  
+(C) Inference for One Parameter.  
+(D) Optional: Comparison Between Two Groups Using Bootstrap  
+  - If your q involves comparing two groups then you should analyze the difference between groups using a bootstrap method such as:  
+    - Bootstrap CI for the difference in means  
+    - Bootstrap CI for the difference in proportions  
+    You can discuss how confidence intervals can be used for hypothesis testing as well.  
+
+---
+(A) Introduction:  
+This report is an independent data analysis which focuses on a curated sample from the National Health and Nutrition Examination Survey (NHANES). This particular data set includes health information collected on adults in the United States over the ages of 20. The survey actively collected information between the years 1999-2018. It contains 31,265 observations and 21 variables.
+
+
+
+```{r, echo=TRUE}
+# install.packages('HDSinRdata')
+library(HDSinRdata)
+help(NHANESsample)
+
+# View the first few rows of the NHANES Sample data, then print a summary (this will help identify any missing values).
+head(NHANESsample)
+summary(NHANESsample)
+
+# View in spreadsheet format. The View() function can then be used to open a spreadsheet-style data viewer in RStudio. The size of the data frame is shown at the bottom corner, both rows and columns. We can use this to quickly apply filters to the data and the data frame will automatically be filtered.
+View(NHANESsample)
+```
+
+
+
+(B) Descriptive Analysis.  
+
+For this analysis, I will conduct inference on a single population parameter from the HDSinRdata package.
+
+Lets choose one variable ----VARIABLE NAME----- to calculate a 95% confidence interval for the mean. The CI calculation and construction depends on the parameter type and distribution assumptions. 
+
+For a population mean: 
+  If σ is known: `CI = x̄ ± z(α/2) · (σ/√n)`
+  If σ is unknown (more common): `CI = x̄ ± t(α/2, n-1) · (s/√n)`
+  
+For a population proportion:
+  If the sample is large (> ~30) we can approximate a normal distribution using the law of large numbers. then the CI calculation is
+    `CI = p̂ ± z(α/2) · √[p̂(1-p̂)/n]`
+    `CI = p_hat +/- z(a/2) * sqrt(p_hat(1-p_hat)/n)`
+Where:
+    x̄ = sample mean, s = sample standard deviation
+    p̂ = sample proportion
+    n = sample size
+    z(α/2) = critical value from standard normal distribution
+    t(α/2, n-1) = critical value from t-distribution with n-1 degrees of freedom
+
+
+
+
+```{r, echo=TRUE}
+
+# Method 1: Manual calculation of 95% CI for the mean
+
+# Formula: mean ± t_critical * (sd / sqrt(n))
+
+ci_manual <- df %>%
+  group_by(group) %>%
+  summarise(
+    n = n(),
+    mean = mean(value),
+    sd = sd(value),
+    se = sd / sqrt(n),
+    # For 95% CI, use qt(0.975, df = n-1)
+    margin = qt(0.975, df = n - 1) * se,
+    ci_lower = mean - margin,
+    ci_upper = mean + margin
+  )
+
+print(“Manual CI Calculation:”)
+print(ci_manual)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Lets try to build a predictive model for blood pressure using blood levels and demographic features.
+
+1. Set up and load data
+```{r, echo=TRUE}
+# Set up and load data
+# Load packages
+library(HDSinRdata)
+library(tidyverse)
+library(caret)      # for train/test split & cross-validation
+library(broom)      # for tidy model outputs
+
+# Load data
+data("NHANESsample")
+df <- NHANESsample
+```
+The caret package [1] (short for Classification And REgression Training) is a set of functions that attempt to streamline the process for creating predictive models. (source [2])
+[1] http://cran.r-project.org/web/packages/caret/index.html
+[2] https://topepo.github.io/caret/
+
+
+
+
+2. We will now preform some Exploratory Data Analysis (EDA) on the data 
+```{r, echo=TRUE}
+# Understand the data
+glimpse(df)
+summary(df)
+
+# Check missing data
+colSums(is.na(df))
+
+# Visualize key relationships
+# BP reading #1
+ggplot(df, aes(x = LEAD, y = DBP1)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm") +
+    labs(dictionary = c(
+    DBP1 = "Diastolic blood pressure reading 1",
+    LEAD  = "Blood lead level (µg/dL)"
+  ))
+
+# BP reading #2
+ggplot(df, aes(x = LEAD, y = DBP2)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm") +
+    labs(dictionary = c(
+    DBP2 = "Diastolic blood pressure reading 2",
+    LEAD  = "Blood lead level (µg/dL)"
+  ))
+
+# BP reading #3
+ggplot(df, aes(x = LEAD, y = DBP3)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm") +
+    labs(dictionary = c(
+    DBP3 = "Diastolic blood pressure reading 3",
+    LEAD  = "Blood lead level (µg/dL)"
+  ))
+
+
+# BP reading #4
+ggplot(df, aes(x = LEAD, y = DBP4)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm") + 
+  labs(dictionary = c(
+    DBP4 = "Diastolic blood pressure reading 4",
+    LEAD  = "Blood lead level (µg/dL)"
+  ))
+
+
+#labels(title = "Diastolic blood pressure reading 4", x = "Blood lead level (µg/dL)")
+# Blood lead level (µg/dL)
+
+# Distribution of outcomes
+# BP reading 1
+ggplot(df, aes(x = DBP1)) +
+  geom_histogram(bins = 30) +
+  labs(dictionary = c(
+    DBP1 = "Diastolic blood pressure reading 1",
+    LEAD  = "Blood lead level (µg/dL)"
+  ))
+
+# BP reading 2
+ggplot(df, aes(x = DBP2)) +
+  geom_histogram(bins = 30) +
+  labs(dictionary = c(
+    DBP1 = "Diastolic blood pressure reading 2",
+    LEAD  = "Blood lead level (µg/dL)"
+  ))
+
+# BP reading 3
+ggplot(df, aes(x = DBP3)) +
+  geom_histogram(bins = 30) +
+  labs(dictionary = c(
+    DBP1 = "Diastolic blood pressure reading 3",
+    LEAD  = "Blood lead level (µg/dL)"
+  ))
+
+# BP reading 4
+ggplot(df, aes(x = DBP4)) +
+  geom_histogram(bins = 30) +
+  labs(dictionary = c(
+    DBP1 = "Diastolic blood pressure reading 4",
+    LEAD  = "Blood lead level (µg/dL)"
+  ))
+
+```
+
+
+Data Processing
+```{r, echo=TRUE}
+# Handle missing data
+
+# Remove rows with any missing value
+df_clean <- na.omit(df)
+sum(is.na(df_clean))
+
+# Quick sanity check of clean data
+cat("Rows before:", nrow(df), "\nRows after (df_clean):", nrow(df_clean), "\n")
+
+# df_clean <- df %>% na.omit()
+# missing_summary <- colSums(is.na(df))
+# df_clean <- df %>% na.omit()
+
+MISSING <- is.na(df$ID) |
+  is.na(df$AGE) |
+  is.na(df$SEX) | 
+  is.na(df$RACE) |
+  is.na(df$EDUCATION) | 
+  is.na(df$INCOME) |
+  is.na(df$SMOKE) |
+  is.na(df$YEAR) |
+  is.na(df$LEAD) |
+  is.na(df$BMI_CAT) | 
+  is.na(df$LEAD_QUANTILE) | 
+  is.na(df$HYP) |
+  is.na(df$ALC) | 
+  is.na(df$DBP1) | 
+  is.na(df$DBP2) |
+  is.na(df$DBP3) |
+  is.na(df$DBP4) | 
+  is.na(df$SBP1) |
+  is.na(df$SBP2) | 
+  is.na(df$SBP3) |
+  is.na(df$SBP4)
+
+
+
+# Use ! to include those that are NOT missing
+df_clean <- subset(df, subset = !MISSING)
+
+
+# Create a train/test split (80/20) using the `createDataPartition()` function. Splitting the data into training and test sets while preserving the distribution of the outcome variable.
+set.seed(806)
+train_index <- createDataPartition(df_clean$DBP1, p = 0.8, list = FALSE)
+train <- df_clean[train_index, ]
+test <- df_clean[-train_index, ]
+
+```
+
+
+======================================================================
+Stuck here because I am not handling missing data correctly !!
+======================================================================
+
+Moving on......
+4. Build models (start simple, then more complex)
+```{r, echo=TRUE}
+# Model 1: Baseline
+model1 <- lm(DBP1 ~ LEAD, data = train)
+
+# Model 2: Add demographics
+model2 <- lm(DBP1 ~ lead + age + gender + race, data = train)
+
+# Model 3: Add interactions 
+model3 <- lm(DBP1 ~ lead * age + gender + race, data = train)
+```
+
+
+5. Evaluate and compare models
+```{r, echo=TRUE}
+## Function to calculate preformace metrics
+evaluate_model <- function(modle, data) {
+  predictions <- predict(model, newdata = dat)
+  tibble(
+    RMSE = sqrt(mean((data$DBP1 - predictions)^2)),
+    MAE = mean(abs(data$DBP1 - predections)),
+    R2 = cor(data$DBP1, predections)^2
+  )
+}
+
+# Compare on test set
+results <- tibble(
+  Model = c("Lead Only", "Demographics", "Interactions"),
+  Train = list(
+    evaluate_model(model1, train),
+    evaluate_model(model2, train),
+    evaluate_model(model3, train)
+  ),
+  Test = list(
+    evaluate_model(model1, test),
+    evaluate_model(model2, test),
+    evaluate_model(model3, test)
+  )
+)
+
+```
+
+
+6. Feature Importance
+```{r, echo=TRUE}
+# Standardized coefficients (compare variable importnace)
+model2_std <- lm(dcale(DBP1) ~ scale(lead) + scale(age) + gender + race, data = train)
+
+# Visualize coefficents
+tidy(model2_std, conf.int = TRUE) %>%
+  filter(term != "(Intercept)") %>%
+  ggplot(aes(x = reorder(term, estimate), y = estimate)) +
+  geom_point() + 
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high)) +
+  coord_flip() +
+  labs(title = "Feature Importance (Standardized Coefficents)")
+
+```
+
+
+
+7. Cross-Validataion (Optional)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,46 @@
+A: Predictive Modeling & Machine Learning Foundations
+
+Can we build a predictive model for blood pressure using blood lead levels and demographic features? How do different features contribute to prediction accuracy?
+
+Statistical approaches: Multiple linear regression, cross-validation, feature importance, model comparison (adjusted R², RMSE)
+Why it's strong: Foundation for ML, demonstrates train/test splits, variable selection, model diagnostics
+
+
+Option A: Predictive Modeling (Question #1)
+This lets you demonstrate:
+
+Data preprocessing pipeline (handling missing data, outliers, transformations)
+Feature engineering and selection
+Model validation strategies (cross-validation, holdout sets)
+Performance metrics and visualization
+Reproducible workflow with clear code organization
+-------------------------------
+
+
+Population Inference & Sampling
+
+How has the distribution of blood lead levels changed over two decades (1999-2018)? Can we quantify and visualize this shift?
+
+Statistical approaches: Distributional analysis, quantile regression, bootstrap confidence intervals, time-series visualization
+Why it's strong: Emphasizes EDA, distribution-based thinking (not just means), modern resampling methods
+
+Option B: Distributional Change Over Time (Question #3)
+This lets you demonstrate:
+
+Advanced visualization (ridgeplots, animated distributions, quantile plots)
+Bootstrap/resampling methods (computational statistics)
+Non-parametric inference
+Temporal data handling
+Statistical storytelling with data
+----------------------------------------
+
+
+
+Computational Statistics & Resampling
+
+What is the 95% confidence interval for the difference in median blood lead levels between two demographic groups using bootstrap methods?
+
+Statistical approaches: Bootstrap resampling, permutation tests, comparison with parametric methods
+Why it's strong: Emphasizes computational approaches over formula-based inference, handles non-normal data
+
+

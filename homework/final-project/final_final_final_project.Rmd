@@ -1,0 +1,424 @@
+
+---
+title: "Stats 521 Final Project Jonathan Dale"
+output:
+  html_document:
+    code_folding: show
+    df_print: paged
+---
+
+```{css, echo=FALSE}
+pre {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 300px;
+}
+/* 
+  Source https://bookdown.org/yihui/rmarkdown-cookbook/html-scroll.html
+*/
+```
+
+```{css, echo=FALSE}
+.scroll-100 {
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+/*
+  Source https://bookdown.org/yihui/rmarkdown-cookbook/html-scroll.html
+*/
+```
+
+
+Report components:  
+(A) Introduction.  
+(B) Descriptive Analysis.  
+(C) Inference for One Parameter.  
+(D) Optional: Comparison Between Two Groups Using Bootstrap  
+  - If your question involves comparing two groups then you should analyze the difference between groups using a bootstrap method such as:
+    - Bootstrap CI for the difference in means  
+    - Bootstrap CI for the difference in proportions  
+    You can discuss how confidence intervals can be used for hypothesis testing as well.  
+
+
+(A) Introduction. 
+---
+This report is an independent data analysis which focuses on a curated sample from the National Health and Nutrition Examination Survey (NHANES). This particular data set includes health information collected on adults in the United States over the ages of 20. The survey actively collected information between the years 1999-2018 and contains 31,265 observations and 21 variables. 
+
+
+
+(B) Descriptive Analysis.  
+---
+```{r, echo=TRUE, class.output="scroll-100", collapse=TRUE}
+# install.packages('HDSinRdata')
+library(HDSinRdata)
+
+# Uncomment the next line to see helpful information about the data NHANESsample
+# help(NHANESsample)
+
+# View the first few rows of the NHANES Sample data, then print a summary (this will help identify any missing values).
+dim(NHANESsample) # Check the dimensions
+str(NHANESsample) # Check the structure
+head(NHANESsample) # View the first few rows
+summary(NHANESsample) # Prints a summary
+
+# Check for missing values
+sum(is.na(NHANESsample$LEAD))
+
+# Summary statistics
+summary(NHANESsample$LEAD)
+
+```
+
+
+## Mean, median, SD, range of the LEAD variable
+
+```{r, collapse=TRUE}
+
+# Mean - the average of a dataset, calculated by summing all the values and dividing by the total count of values.
+mean(NHANESsample$LEAD, na.rm = TRUE)
+
+# Median - the middle value in a dataset when arranged in order, representing the mid point where 50% of the falls below and 50% of the data falls above it.  
+median(NHANESsample$LEAD, na.rm = TRUE)
+
+# Standard Deviation - measures how spread out data points are from the average (mean)
+sd(NHANESsample$LEAD, na.rm = TRUE)
+
+# Variance - a measure of how spread out a set of numbers is from its average (mean), calculated as the average of the squared differences from the mean
+var(NHANESsample$LEAD, na.rm = TRUE)
+
+# Interquartile range - a measure of statistical dispersion representing the spread of the middle 50% of a dataset
+IQR(NHANESsample$LEAD, na.rm = TRUE)
+
+# Range - the simplest measure of the data spread, calculated by subtracting the minimum value from the maximum value in a data set showing the total span of your data. The range is an indication of the variability and useful for a quick understanding of the data but a single extreme outlier can drastically change it.
+range(NHANESsample$LEAD, na.rm = TRUE)
+min(NHANESsample$LEAD, na.rm = TRUE)
+max(NHANESsample$LEAD, na.rm = TRUE)
+
+# Quantile - divides a dataset or probability distribution into equal-sized, adjacent subgroups, representing values below which specific proportions of data fall
+quantile(NHANESsample$LEAD, probs = c(0.25, 0.5, 0.75, 0.90, 0.95), na.rm = TRUE)
+
+```
+
+
+
+We can also view the data in spreadsheet format. The View() function can be used to open a spreadsheet-style data viewer in RStudio. The size of the data frame is shown at the bottom corner, both rows and columns. We can use this to quickly apply filters to the data and the data frame will automatically be filtered.
+
+```{r}
+# Uncomment the following line to view the entire data set in a spreadsheet like format.
+##View(NHANESsample) 
+## Intentionally left the line above commented out to keep the report brief
+```
+
+
+## Visualizations
+Visualizations of the lead variable are an easy way to quickly see how the blood lead levels are skewed. 
+```{r, echo=TRUE, results='hold', collapse=TRUE}
+
+# Histogram
+hist(NHANESsample$LEAD, 
+     main = "Distribution of Blood Lead Levels",
+     xlab = "Lead Level",
+     col = "lightblue")
+
+# Boxplot
+boxplot(NHANESsample$LEAD,
+        main = "Blood Lead Levels",
+        ylab = "Lead Level")
+
+# Density plot
+plot(density(NHANESsample$LEAD, na.rm = TRUE),
+     main = "Density Plot of Lead Levels")
+
+
+```
+
+
+
+
+(C) Inference for One Parameter.  
+---
+For this analysis, I will conduct inference on a single population parameter from the `HDSinRdata` package. We can do this by calculating a 95% confidence interval for the mean. The CI calculation and construction depends on the parameter type and distribution assumptions. 
+
+For a population mean: 
+  If σ is known: `CI = x̄ ± z(α/2) · (σ/√n)`
+  If σ is unknown (more common): `CI = x̄ ± t(α/2, n-1) · (s/√n)`
+  
+For a population proportion:
+  If the sample is large (> ~30) we can approximate a normal distribution using the Central Limit Theorem. The CLT allows us to approximate normality with large samples. The CI calculation is:
+    `CI = p̂ ± z(α/2) · √[p̂(1-p̂)/n]`
+    `CI = p_hat +/- z(a/2) * sqrt(p_hat(1-p_hat)/n)`
+Where:
+    x̄ = sample mean, s = sample standard deviation
+    p̂ = sample proportion
+    n = sample size
+    z(α/2) = critical value from standard normal distribution
+    t(α/2, n-1) = critical value from t-distribution with n-1 degrees of freedom
+
+Parameter of Interest: Population mean blood lead level (μ), measured in micrograms per deciliter (ug/dL).
+A description of our parameter from the help page is below:
+`Lead (ug/dL): "LBXBPB" in NHANES unless the reported level of lead was less than the lower limit of detection (llod),` +
+`as defined by the paper cited above, for the relevant year, in which case "LBXBPB" was replaced by llod/sqrt(2))`
+
+Our assumptions include: 
+  (1) the sample is representative of the population 
+  (2) the variable is approximately normally distributed or the sample size is sufficiently large to invoke the Central Limit Theorem.
+
+```{r, echo=TRUE, results='hold', class.source = 'fold-hide'}
+
+# install packages 
+library(HDSinRdata)
+
+# Load data and create a data frame
+data("NHANESsample")
+df <- NHANESsample
+
+# Extract variable LEAD
+x <- df$LEAD
+
+# Calculate number, mean, standard deviation, and standard error
+n <- length(x)
+xbar <- mean(x, na.rm = TRUE)
+s <- sd(x, na.rm = TRUE)
+se <- s / sqrt(n)
+
+# Set confidence level of 95%
+conf_level <- 0.95
+alpha <- 1 - conf_level
+
+# Calculate critical value from the t-distribution
+t_crit <- qt(1 - alpha/2, df = n - 1)
+
+# Calculate confidence interval
+margin_of_error <- t_crit * se
+ci_lower <- xbar - margin_of_error
+ci_upper <- xbar + margin_of_error
+
+# Display results
+cat("========================================\n")
+cat("Confidence Interval for Mean Blood Lead Level\n")
+cat("Sample size (n):", n, "\n")
+cat("Sample mean (x̄):", xbar, "\n")
+cat("Sample standard deviation (s):", round(s, 4), "ug/dL\n")
+cat("Standard error (SE):", se, "\n")
+cat("Degrees of freedom:", n - 1, "\n")
+cat("t-critical value:", round(t_crit, 4), "\n")
+cat("Margin of error:", round(margin_of_error, 4), "ug/dL\n")
+cat(conf_level*100, "% Confidence Interval: [", round(ci_lower, 4), ",", round(ci_upper, 4), "]\n")
+cat("========================================\n")
+
+```
+
+
+## Visualizations
+We can create a Q-Q plot to check our assumptions of normality. If the data points in the Q-Q plot fall close along this straight line it suggests that the data is normally distributed.
+
+```{r, class.source = 'fold-hide'}
+# We can create a Q-Q plot to check our assumptions of normality. If the data points in the Q-Q plot fall close along this straight line it suggests that the data is normally distributed.
+qqnorm(x, main = "Q-Q Plot of Blood Lead Levels")
+qqline(x, col = "red")
+```
+
+
+## Histogram to visualize distribution
+```{r, class.source = 'fold-hide', message=FALSE}
+# Histogram to visualize distribution
+library(ggplot2)
+
+ggplot(data.frame(x = x), aes(x = x)) +
+  geom_histogram(bins = 90, fill = "lightblue", color = "black") +
+  geom_vline(aes(xintercept = xbar, color = "Sample Mean"),
+             linetype = "longdash", linewidth = 1) +
+  geom_vline(aes(xintercept = ci_lower, color = "95% CI Bounds"),
+             linetype = "dashed", linewidth = 1) +
+  geom_vline(aes(xintercept = ci_upper, color = "95% CI Bounds"),
+             linetype = "dashed", linewidth = 1) +
+  scale_color_manual(name = "",
+                     values = c("Sample Mean" = "red", "95% CI Bounds" = "blue")) +
+  labs(title = "Distribution of Blood Lead Levels",
+       x  = "Lead (ug/dL)",
+       y = "Count") +
+  theme_minimal() +
+  theme(legend.position = "top")
+```
+
+Interpretation:
+Based on the analysis of the mean blood lead level x_bar = `r round(xbar, 4)` ug/dL with a standard error of `r round(se, 4)` ug/dL. We can interpret this result as follows:
+If we were to repeatedly sample from this population and construct a 95% confidence interval using the same methodology, approximately 95% of such intervals would contain the true population mean blood lead level. This interval provides a range of plausible values for the average blood lead level in the population from which this sample was drawn (accounting for sampling variability). 
+
+
+
+
+
+(D) Optional: Comparison Between Two Groups Using Bootstrap.  
+---
+
+The bootstrap is a resampling technique that estimates the sampling distribution of a statistic by repeatedly sampling with replacement from the observed data. For comparing two groups, bootstrap methods provide several advantages.
+  - They do not require normality assumptions
+  - They can construct confidence interval for complex statistics
+  - They provided robust inference when the sample size is moderate
+  - They account for the variability in both groups
+
+```{r, echo=TRUE}
+
+# Load required packages
+library(HDSinRdata)
+
+# Load the data
+data(NHANESsample)
+
+# Compare lead levels between males and females
+table(NHANESsample$SEX)
+
+```
+
+
+```{r, echo=TRUE, results='hold'}
+# Create clean data set with complete cases for analysis
+analysis_data <- NHANESsample[!is.na(NHANESsample$LEAD) & 
+                               !is.na(NHANESsample$SEX), ]
+
+# Create separate lead groups for each gender
+group1 <- analysis_data$LEAD[analysis_data$SEX == "Male"]
+group2 <- analysis_data$LEAD[analysis_data$SEX == "Female"]
+
+# Calculate the difference in means
+observed_diff <- mean(group1) - mean(group2)
+
+cat("Group 1 (Male) sample size:", length(group1), "\n")
+cat("Group 2 (Female) sample size:", length(group2), "\n")
+cat("Observed difference in means:", round(observed_diff, 4), "ug/dL\n\n")
+
+# Bootstrap procedure
+set.seed(806)
+B <- 10000  # Number of bootstrap samples
+boot_diffs <- numeric(B) # Create a numeric vector with length 10000 (empty at this time)
+
+
+for(i in 1:B) {
+  # Resample from each group with replacement
+  boot_group1 <- sample(group1, size = length(group1), replace = TRUE)
+  boot_group2 <- sample(group2, size = length(group2), replace = TRUE)
+  
+  # Calculate the difference in means
+  boot_diffs[i] <- mean(boot_group1) - mean(boot_group2)
+}
+
+
+# Calculate a 95% confidence interval
+conf_level <- 0.95
+alpha <- 1 - conf_level
+boot_ci_lower <- quantile(boot_diffs, alpha/2, na.rm = TRUE)
+boot_ci_upper <- quantile(boot_diffs, 1 - alpha/2, na.rm = TRUE)
+
+# Display results
+cat("========================================\n")
+cat("Bootstrap Comparison of Two Groups\n")
+cat("========================================\n")
+cat("Number of bootstrap samples:", B, "\n")
+cat("Observed difference (Group 1 - Group 2):", round(observed_diff, 4), "ug/dL\n")
+cat("Bootstrap mean:", round(mean(boot_diffs), 4), "ug/dL\n")
+cat("Bootstrap SE:", round(sd(boot_diffs), 4), "ug/dL\n")
+cat(conf_level*100, "% Bootstrap CI: [", 
+    round(boot_ci_lower, 4), ",", round(boot_ci_upper, 4), "] ug/dL\n")
+cat("========================================\n")
+
+```
+
+
+```{r}
+# Visualize bootstrap distribution
+library(ggplot2)
+
+ggplot(data.frame(diff = boot_diffs), aes(x = diff)) +
+  geom_histogram(bins = 50, fill = "lightblue", color = "black", aes(y = after_stat(density))) +
+  geom_vline(aes(xintercept = observed_diff, color = "Observerd Difference"),
+             linetype = "solid", linewidth = 1) +
+  geom_vline(aes(xintercept = boot_ci_lower, color = "95% CI Bounds"),
+             linetype = "dashed", linewidth = 1) +
+  geom_vline(aes(xintercept = boot_ci_upper, color = "95% CI Bounds"),
+             linetype = "dashed", linewidth = 1) +
+  geom_vline(aes(xintercept = 0, color = "No Difference"),
+             linetype = "dotted", linewidth = 1) +
+  scale_color_manual(name = "",
+                     values = c("Observed Difference" = "red",
+                                "95% CI Bounds" = "blue",
+                                "No Difference" = "black")) +
+  labs(title = "Bootstrap Distribution of Difference in Means",
+       x = "Difference in Mean Lead Levels (ug/dL)",
+       y = "Density") +
+  theme_minimal() +
+  theme(legend.position = "top")
+```
+
+
+```{r}
+# Create a Q-Q plot to assess bootstrap distribution
+qqnorm(boot_diffs, main = "Q-Q Plot of Bootstrap Distribution")
+qqline(boot_diffs, col = "red")
+```
+
+
+```{r, message=FALSE}
+# Create a side-by-side boxplot of original data using ggplot2
+library(ggplot2)
+
+# Calculate group means for annotation
+group_means <- aggregate(LEAD ~ SEX, data = analysis_data, FUN = mean)
+
+ggplot(analysis_data, aes(x = SEX, y = LEAD, fill = SEX)) +
+  geom_boxplot(alpha = 0.7, outlier.shape = 21, outlier.size = 2) +
+  geom_jitter(width = 0.2, alpha = 0.1, size = 0.5) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "darkred") +
+  stat_summary(fun = mean, geom = "text", aes(label = paste("Mean:", round(after_stat(y), 2))),
+               vjust = -1.5, size = 3.5, color = "darkred") +
+  scale_fill_manual(values = c("Male" = "#4A90D9", "Female" = "#E57373")) +
+  labs(title = "Blood Lead Level by Gender",
+       subtitle = "Boxplot with individual observations and group means",
+       x = "Gender",
+       y = "Lead (ug/dL)") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        plot.title = element_text(face = "bold", size = 14),
+        plot.subtitle = element_text(color = "gray50", size = 10),
+        axis.text = element_text(size = 11),
+        axis.title = element_text(size = 12))
+
+```
+
+Interpretation:
+The bootstrap analysis reveals a statistically significant difference in mean blood lead levels between males and females. The observed difference of `r round(observed_diff, 4)` ug/dL indicates that males have higher average blood lead levels than females. The 95% bootstrap confidence interval [`r round(boot_ci_lower, 4)`, `r round(boot_ci_upper, 4)`] dose not contain zero, providing strong evidence that this difference is not due to random sampling variability alone. 
+
+The bootstrap distribution appears approximately normal (as shown in the Q-Q plot), which supports the validity of our confidence interval. Since zero falls outside the confidence interval, we can conclude at the 95% confidence level that their is a meaningful difference in blood lead levels between genders in this population. 
+
+
+Conclusion
+---
+
+This anallysis examined blood lead levels from the NHANES dataset using both classical and bootstrap statistical methods. The key findings are:
+
+1. **Descriptive Statistic**: The distribution of blood lead levels is right-skewed, with a mean of `r round(xbar, 4)` ug/dL and considerable variabilriy in the population.
+
+2. **Confidence Interval for the Mean**: Using t-distribution methods, we constructed a 95% confidence interval for the popluation mean blood lead level, providing a range of plausible valies for this parameter.
+
+3. **Gender Comparison**: Bootstrap resampling revealed a statistically significant difference in blood lead levels between males and females, with males exibiting higher average levels. The 95% bootstrpa confidence interval for the difference did not include zero, supporting the conclusion that this difference is unlikely due to chance alone. 
+
+**Limitations**: This analysis is observational an dcannot establish causation. Additionally, while the sample size is large, the data may not be perfectly representative of all U.S. adults. Future analysis could explore potential confounding variables such as age, occoupation, or geographic region. 
+
+---
+
+*Thank you for taking the time to review this analysis. The methods and interpertations presented here reflect the statistical concepts covered in Stats 521, and I hope this report demonstrates a clear understanding of confidence intervals, and bootstrap methods.*
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,763 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Lab 7 - Inference on Means},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Lab 7 - Inference on Means}
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+\maketitle
+
+\subsection{North Carolina Births}\label{north-carolina-births}
+
+In 2004, the state of North Carolina released to the public a large data
+set containing information on births recorded in this state. This data
+set has been of interest to medical researchers who are studying the
+relation between habits and practices of expectant mothers and the birth
+of their children. We will work with a sample of observations from this
+data set. These 999 cases were chosen at random.
+
+Let's load the \texttt{nc} data set into our workspace. The data is in a
+file called \texttt{nc.csv}.
+
+\vspace{3mm}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# change working directory to the folder}
+\CommentTok{\# where the data is saved}
+\NormalTok{nc }\OtherTok{=} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"nc.csv"}\NormalTok{, }\AttributeTok{header=}\NormalTok{T)}
+\CommentTok{\# attach dataset to workspace}
+\FunctionTok{attach}\NormalTok{(nc)}
+\end{Highlighting}
+\end{Shaded}
+
+We have observations on 13 different variables, some categorical and
+some numerical. The meaning of each variable is as follows.
+
+\begin{table}[h] \small
+\begin{tabular}{r | l}
+\texttt{fage} & father's age in years. \\
+\texttt{mage} & mother's age in years. \\
+\texttt{mature} & maturity status of mother. \\
+\texttt{weeks} & length of pregnancy in weeks. \\
+\texttt{premie} & whether the birth was classified as premature (premie) or full-term. \\
+\texttt{visits} & number of hospital visits during pregnancy. \\
+\texttt{gained} & weight gained by mother during pregnancy in pounds. \\
+\texttt{weight} & weight of the baby at birth in pounds. \\
+\texttt{lowbirthweight} & whether baby was classified as low birthweight (`low`) or not (`not low`). \\
+\texttt{gender} & gender of the baby, `female` or `male`. \\
+\texttt{habit} & status of the mother as a `nonsmoker` or a `smoker`. \\
+\texttt{marital} & whether mother is `married` or `not married` at birth. \\
+\texttt{whitemom} & whether mom is `white` or `not white`. \\
+\end{tabular}
+\end{table}
+
+First, let's calculate the mean and the standard deviation of babies'
+weights in this sample as well as the sample size.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{xbar }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(weight)}
+\NormalTok{s }\OtherTok{\textless{}{-}} \FunctionTok{sd}\NormalTok{(weight)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(weight)}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Exercise 1:} Make a histogram of weight of the baby,
+\texttt{weight} variable, and describe the distribution of this
+variable.
+
+Now we make a density histogram to use as the backdrop and use the
+\texttt{lines()} function to overlay a normal probability curve. The
+difference between a frequency histogram and a density histogram is that
+while in a frequency histogram the \texttt{heights} of the bars add up
+to the total number of observations, in a density histogram the
+\texttt{areas} of the bars add up to 1. The area of each bar can be
+calculated as simply the height \(\times\) the width of the bar. Using a
+density histogram allows us to properly overlay a normal distribution
+curve over the histogram since the curve is a normal probability density
+function. Frequency and density histograms both display the same exact
+shape; they only differ in their y-axis. You can verify this by
+comparing the frequency histogram you constructed earlier and the
+density histogram created by the commands below.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Plot histogram}
+\FunctionTok{hist}\NormalTok{(weight, }\AttributeTok{probability =} \ConstantTok{TRUE}\NormalTok{)}
+\CommentTok{\# Weights range }
+\NormalTok{x }\OtherTok{=} \FunctionTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{13}\NormalTok{, }\AttributeTok{by=}\FloatTok{0.1}\NormalTok{)}
+\CommentTok{\# Compute density for x values}
+\NormalTok{y }\OtherTok{=} \FunctionTok{dnorm}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{mean =}\NormalTok{ xbar, }\AttributeTok{sd =}\NormalTok{ s)}
+\CommentTok{\# Draw line on top of histogram}
+\FunctionTok{lines}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =}\NormalTok{ y, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics[width=0.47\linewidth]{Lab7-HW5_files/figure-latex/unnamed-chunk-3-1} \end{center}
+
+After plotting the density histogram with the first command, we create
+the x- and y-coordinates for the normal curve. We chose the \texttt{x}
+range as 1 to 13 in order to span the entire range of \texttt{weight}.
+To create \texttt{y}, we use \texttt{dnorm()} to calculate the density
+of each of those x-values in a distribution that is normal with mean
+\texttt{xbar} and standard deviation \texttt{s}. The final command draws
+a curve on the existing plot (the density histogram) by connecting each
+of the points specified by \texttt{x} and \texttt{y}.
+
+Eyeballing the shape of the histogram is one way to determine if the
+data appear to be nearly normally distributed. A normal probability plot
+or Q-Q plot is also a good alternative approach to check for normality.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{qqnorm}\NormalTok{(weight)}
+\FunctionTok{qqline}\NormalTok{(weight)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics[width=0.45\linewidth]{Lab7-HW5_files/figure-latex/unnamed-chunk-4-1} \end{center}
+
+\textbf{Exercise 2:} Based on these plots, does it appear that the data
+follow a nearly normal distribution?
+
+Note that event though the Q-Q plot displays a deviation from normality,
+the sample size is large enough (\(n=999 >30\)) such that the results
+from the Central Limit Theorem still apply and we can proceed to perform
+inference on the parameters of interest.
+
+\subsection{Confidence Intervals for a
+Mean}\label{confidence-intervals-for-a-mean}
+
+If we want to estimate the average weight of a baby at birth, we can use
+information from this sample to build a confidence interval for the true
+population parameter.
+
+Remember that a confidence interval is always of the form
+
+\begin{center}
+$ point~estimate + ME$
+\end{center}
+
+In this case the point estimate is the sample mean. The margin of error
+is always composed of two components, a critical value (\(t^\star\) or
+\(z^\star\)) and a standard error multiplied together. The standard
+error for the sample mean can be calculated as \(\frac{s}{\sqrt{n}}\).
+Let's calculate that first.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{se }\OtherTok{\textless{}{-}}\NormalTok{ s }\SpecialCharTok{/} \FunctionTok{sqrt}\NormalTok{(n)}
+\end{Highlighting}
+\end{Shaded}
+
+Note that for \(n=999\), the t-distribution -- which is the exact
+distribution to use to calculate a confidence interval for the mean --
+is indistinguishable from the normal. By now, you probably know that
+\(z^\star\) for a 95\% confidence interval is 1.96. This value comes
+from the fact that \(z = -1.96\) and \(z = 1.96\) are the cutoff values
+for the middle 95\% of a standard normal distribution. In other words,
+they are the cutoff points for the 2.5\(^{th}\) percentile (in the lower
+end) and \(2.5 + 95 = 97.5^{th}\) percentile (in the upper end). In
+order to get R to calculate this value for us, we use
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{qnorm}\NormalTok{(}\FloatTok{0.975}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1.959964
+\end{verbatim}
+
+So if we wanted to calculate the critical value for a 98\% confidence
+interval, we first need to realize that the middle 98\% of the
+distribution will be bounded by the 1\(^{st}\) and the 99\(^{th}\)
+percentiles, and hence the critical value will be
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{qnorm}\NormalTok{(}\FloatTok{0.99}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2.326348
+\end{verbatim}
+
+since the critical value is always positive.
+
+\textbf{Exercise 3:} Verify that the critical values above are very
+similar to those obtained from the corresponding t-distribution.
+
+Let's get back to the calculation of the confidence interval. If we want
+to construct a 95\% confidence interval we can set \(z^\star\) to be
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{zstar }\OtherTok{\textless{}{-}} \FunctionTok{qnorm}\NormalTok{(}\FloatTok{0.975}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+The margin of error is simply the product of \(z^\star\) and the
+standard error
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{me }\OtherTok{\textless{}{-}}\NormalTok{ zstar }\SpecialCharTok{*}\NormalTok{ se}
+\end{Highlighting}
+\end{Shaded}
+
+Then, the bounds of the confidence interval can be calculated as
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{xbar }\SpecialCharTok{{-}}\NormalTok{ me}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 7.011111
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{xbar }\SpecialCharTok{+}\NormalTok{ me}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 7.197838
+\end{verbatim}
+
+\textbf{Exercise 4:} Interpret the confidence interval. Make sure to put
+it in context of the data.
+
+\subsection{Hypothesis Testing for
+Means}\label{hypothesis-testing-for-means}
+
+In first world nations, the average birth weight of a full-term new born
+is approximately 7.5 pounds. Let's see how the average weight of babies
+born in North Carolina compare to this value.
+
+In order to do this we need to first subset our dataset to include only
+full-term babies. We'll call this new data set \texttt{nc\_ft}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nc\_ft }\OtherTok{\textless{}{-}} \FunctionTok{subset}\NormalTok{(nc, nc}\SpecialCharTok{$}\NormalTok{premie }\SpecialCharTok{==} \StringTok{"full term"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+You should see a new data set appear in your workspace which has 846
+rows and 13 variables. Earlier we saw that there were 152 premature and
+846 full term births, hence we know that there should be 846 cases
+(rows) in the new data set that we just created.
+
+Let's calculate the mean birth weight for the full term babies
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{xbar }\OtherTok{=} \FunctionTok{mean}\NormalTok{(nc\_ft}\SpecialCharTok{$}\NormalTok{weight)}
+\NormalTok{boot\_means }\OtherTok{\textless{}{-}} \FunctionTok{replicate}\NormalTok{(}\DecValTok{5000}\NormalTok{, }\FunctionTok{mean}\NormalTok{(}\FunctionTok{sample}\NormalTok{(nc\_ft}\SpecialCharTok{$}\NormalTok{weight, }\AttributeTok{replace =} \ConstantTok{TRUE}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+This value is slightly below 7.5 pounds, but it's close.
+
+\textbf{Exercise 5:} How would you expect the sample mean of birth
+weight to differ between the complete dataset (\texttt{nc}) and the
+subsetted dataset (\texttt{nc\_ft})?
+
+\textbf{Solution} The mean birth rate from the complete data set
+(\texttt{nc}) should be slightly lower than the sample mean birth weight
+since in the subset data set (\texttt{nc\_ft}) we excluded all of the
+data points that come from babies that were not full term at the time of
+birth. Since the average birth weight of a full-term new born is
+approximately 7.5 pounds and the data points that we removed include all
+babies that were not full term. These babies have weights that are
+likely below the average weight of 7.5 pounds meaning that the sample
+mean will be higher than if we did not create a subset.
+
+\textbf{Exercise 6:} Write the hypotheses for testing if the average
+weight of full term babies born in North Carolina is different than 7.5
+ounces.
+
+To conduct the hypothesis test we need to first calculate a test
+statistic, a \(z\)-score, using the formula
+
+\[ z = \frac{\bar{x} - \mu}{SE} \]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\# xbar = mean(nc\_ft$weight) from above \^{}\^{}}
+\NormalTok{mu }\OtherTok{\textless{}{-}} \FloatTok{7.5}
+\NormalTok{s }\OtherTok{\textless{}{-}} \FunctionTok{sd}\NormalTok{(nc\_ft}\SpecialCharTok{$}\NormalTok{weight)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(nc\_ft}\SpecialCharTok{$}\NormalTok{weight)}
+\NormalTok{se }\OtherTok{\textless{}{-}}\NormalTok{ s }\SpecialCharTok{/} \FunctionTok{sqrt}\NormalTok{(n)}
+\NormalTok{z }\OtherTok{\textless{}{-}}\NormalTok{ (xbar }\SpecialCharTok{{-}}\NormalTok{ mu) }\SpecialCharTok{/}\NormalTok{ se}
+\end{Highlighting}
+\end{Shaded}
+
+Calculating the p-value is a two step process: first find the tail area,
+and then multiply by two since the alternative hypothesis is two sided.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tail }\OtherTok{\textless{}{-}} \FunctionTok{pnorm}\NormalTok{(z, }\AttributeTok{lower.tail =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{pval }\OtherTok{\textless{}{-}}\NormalTok{ tail }\SpecialCharTok{*} \DecValTok{2}
+\end{Highlighting}
+\end{Shaded}
+
+Note that we used \texttt{lower.tail\ =\ TRUE} since the \(z\)-score we
+obtained was negative. If we wanted to get the upper tail, which is
+often the case when we have a positive \(z\)-score, we would use
+\texttt{lower.tail\ =\ FALSE}.
+
+\textbf{Exercise 8:} What is the conclusion of the hypothesis test? Make
+sure to to provide an interpretation in context.
+
+\textbf{Solution} If p-value \textless{} α, reject H0, data provide
+evidence for HA If p-value \textgreater{} α, do not reject H0, data do
+not provide evidence for HA If µ0 is inside the CI ⇒ fail to reject H0.
+If µ0 is outside the CI ⇒ reject H0.
+
+Since p-value=0.272 and is greater than 0.05 we fail to reject H0. The
+data dose not provide convincing evidence that the average weight of
+full term babies born in North Carolina is different than 7.5 pounds.
+
+\subsection{More Practice}\label{more-practice}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Using the original data set, \texttt{nc}, create a new data set called
+  \texttt{nc\_sm} that only contains information from smoker mothers.
+  Then calculate the average weight gained by these mothers.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nc\_sm }\OtherTok{\textless{}{-}} \FunctionTok{subset}\NormalTok{(nc, nc}\SpecialCharTok{$}\NormalTok{habit }\SpecialCharTok{==} \StringTok{"smoker"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Note that the variable `gained' contains missing values that will
+produce a value of \texttt{NA} (i.e.~Not Available) in your
+calculations. To remove the missing values (after you create the
+\texttt{nc\_sm} data set), define a new variable called \texttt{gain}
+using the following code :
+
+\vspace{3mm}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{gain }\OtherTok{\textless{}{-}}\NormalTok{ nc\_sm}\SpecialCharTok{$}\NormalTok{gained[}\FunctionTok{is.na}\NormalTok{(nc\_sm}\SpecialCharTok{$}\NormalTok{gained)}\SpecialCharTok{==}\NormalTok{F]}
+\end{Highlighting}
+\end{Shaded}
+
+Use the \texttt{gain} variable you just created to perform all
+calculations.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Check if the assumptions and conditions necessary for inference on a
+  mean are satisfied for this sample of smoker mothers.
+\end{enumerate}
+
+\textbf{Solution} We need to check that the data is a random sample,
+independence, and the sampling distribution is approximately normal.
+
+\begin{verbatim}
+1. The given data was provided with a statement indicates that the sample is random, hence, the observations are independent.
+2. We can see from the calculations below that the weight gained is within 10% of the mean. 
+3. Since the sample size, 126 observations, is greater than 30, the Central Limit Theorem states the sampling distribution will be approximately normal regardless of the population shape. 
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nc\_sm }\OtherTok{\textless{}{-}} \FunctionTok{subset}\NormalTok{(nc, nc}\SpecialCharTok{$}\NormalTok{habit }\SpecialCharTok{==} \StringTok{"smoker"}\NormalTok{)}
+\NormalTok{gain }\OtherTok{\textless{}{-}}\NormalTok{ nc\_sm}\SpecialCharTok{$}\NormalTok{gained[}\FunctionTok{is.na}\NormalTok{(nc\_sm}\SpecialCharTok{$}\NormalTok{gained)}\SpecialCharTok{==}\NormalTok{F]}
+\NormalTok{xbar\_sm }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(gain)}
+\NormalTok{s\_sm }\OtherTok{\textless{}{-}} \FunctionTok{sd}\NormalTok{(gain)}
+\NormalTok{n\_sm }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(gain)}
+\NormalTok{boot\_mean\_sm }\OtherTok{\textless{}{-}} \FunctionTok{replicate}\NormalTok{(}\DecValTok{5000}\NormalTok{, }\FunctionTok{mean}\NormalTok{(}\FunctionTok{sample}\NormalTok{(gain, }\AttributeTok{replace =} \ConstantTok{TRUE}\NormalTok{)))}
+
+\NormalTok{xbar\_sm}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 31.92623
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(boot\_mean\_sm[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] 31.98361 32.40984 30.55738 33.61475 31.42623 30.42623 29.37705 29.57377
+##  [9] 31.50820 31.96721
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{hist}\NormalTok{(gain, }\AttributeTok{probability =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{x\_sm }\OtherTok{=} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{76}\NormalTok{, }\AttributeTok{by=}\NormalTok{.}\DecValTok{01}\NormalTok{)}
+\NormalTok{y\_sm }\OtherTok{=} \FunctionTok{dnorm}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x\_sm, }\AttributeTok{mean =} \FunctionTok{mean}\NormalTok{(gain), }\AttributeTok{sd =} \FunctionTok{sd}\NormalTok{(gain))}
+\FunctionTok{lines}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x\_sm, }\AttributeTok{y =}\NormalTok{ y\_sm, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Lab7-HW5_files/figure-latex/unnamed-chunk-17-1} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{qqnorm}\NormalTok{(gain)}
+\FunctionTok{qqline}\NormalTok{(gain)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Lab7-HW5_files/figure-latex/unnamed-chunk-17-2} \end{center}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Construct a 95\% confidence interval for the average weight gained by
+  smoker mothers and provide an interpretation for this interval in
+  context.
+\end{enumerate}
+
+\textbf{Solution} Since the confidence interval is always of the form
+
+\begin{center}
+$ point~estimate + ME$
+\end{center}
+
+Where the margin of error is always composed of the product of two
+components, a critical value (t⋆ or z⋆) and a standard error.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{se\_smoker }\OtherTok{\textless{}{-}}\NormalTok{ s\_sm }\SpecialCharTok{/} \FunctionTok{sqrt}\NormalTok{(n\_sm)}
+\NormalTok{me\_smoker }\OtherTok{\textless{}{-}}\NormalTok{ zstar }\SpecialCharTok{*}\NormalTok{ se\_smoker}
+
+\CommentTok{\# The bounds of the confidence interval can be calculated as}
+\NormalTok{xbar\_sm }\SpecialCharTok{{-}}\NormalTok{ me\_smoker}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 29.14897
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{xbar\_sm }\SpecialCharTok{+}\NormalTok{ me\_smoker}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 34.70349
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Weight gain of roughly 30 pounds is considered normal. Conduct a
+  hypothesis test to evaluate if the average weight gain of smoker
+  mothers is different than 30 pounds. Make sure to interpret your
+  conclusion in context of the question.
+\end{enumerate}
+
+\textbf{Solution} The Null Hypothesis (\(H_{0}\)): The average weight
+gain of smoker mothers is equal to 30 pounds. Alternative Hypothesis
+(\(H_{a}\)): The average weight gain of smoker mothers is not equal to
+30 pounds. To conduct the hypothesis test we need to first calculate a
+test statistic, a \(z\)-score, using the formula
+
+\[ z = \frac{\bar{x} - \mu}{SE} \]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Calculate the following:}
+\CommentTok{\# mu zero}
+\CommentTok{\# number of smokers}
+\CommentTok{\# standard deviation smokers}
+
+\CommentTok{\# xbar\_sm \textless{}{-} mean(gain)   \#\# calculated above \^{}\^{}}
+\NormalTok{mu\_sm }\OtherTok{\textless{}{-}} \DecValTok{30}
+\NormalTok{s\_sm }\OtherTok{\textless{}{-}} \FunctionTok{sd}\NormalTok{(gain)}
+\NormalTok{n\_sm }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(gain)}
+
+\NormalTok{se\_sm }\OtherTok{\textless{}{-}}\NormalTok{ s\_sm }\SpecialCharTok{/} \FunctionTok{sqrt}\NormalTok{(n\_sm)}
+\NormalTok{se\_sm}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1.416997
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{z\_sm }\OtherTok{\textless{}{-}}\NormalTok{ (xbar\_sm }\SpecialCharTok{{-}}\NormalTok{ mu\_sm) }\SpecialCharTok{/}\NormalTok{ se\_sm}
+\NormalTok{z\_sm}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1.359374
+\end{verbatim}
+
+Now we calculate a p-value: Since the alternative hypothesis is NOT two
+sided, we only include one tail in the calculation for the p-value.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pnorm}\NormalTok{(z\_sm, }\AttributeTok{lower.tail =} \ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.087014
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# tail \textless{}{-}pnorm(z\_sm, lower.tail = FALSE)}
+\CommentTok{\# pval \textless{}{-} 2 * tail}
+\CommentTok{\# pval}
+\end{Highlighting}
+\end{Shaded}
+
+Since p-value=0.087014 is greater than 0.05 we fail to reject the Null
+Hypothesis. The data dose not provide convincing evidence that the
+average weight gain of mothers in North Carolina who smoke during
+pregnancy is different than 30 pounds.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  Do the results of the confidence interval and hypothesis test agree
+  with each other? Is this what you would expect or not? Explain.
+\end{enumerate}
+
+\textbf{Solution} Yes the results of the two tail hypothesis test and
+the corresponding confidence interval will always agree; this is
+expected since they are two different perspectives on the same
+statistical question.
+
+\subsubsection{Inference for
+proportions}\label{inference-for-proportions}
+
+Follow similar steps for the following exercise on inference for
+proportions i.e.~check assumptions, show your calculations, state the
+hypothesis, and interpret your results in context.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{5}
+\tightlist
+\item
+  Estimate the population proportion of premature births \(p\) using a
+  95\% confidence interval.
+\end{enumerate}
+
+\textbf{Solution} Since the confidence interval is always of the form
+
+\begin{center}
+$ point~estimate + ME$
+\end{center}
+
+Where the margin of error is always composed of the product of a
+critical value (t⋆ or z⋆) and the standard error. We will begin by
+creating a value to store the number of premature births and construct a
+95\% confidence interval \(z^\star\) to be
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nc\_premi }\OtherTok{\textless{}{-}} \FunctionTok{subset}\NormalTok{(nc, nc}\SpecialCharTok{$}\NormalTok{premie }\SpecialCharTok{==} \StringTok{"premie"}\NormalTok{) }\CommentTok{\# North Carolina premature births}
+\NormalTok{n\_premi }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(nc\_premi}\SpecialCharTok{$}\NormalTok{premie) }\CommentTok{\# Number of premature births}
+\NormalTok{n\_total }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(nc}\SpecialCharTok{$}\NormalTok{premie) }\CommentTok{\# Total number in sample}
+
+\NormalTok{p\_hat }\OtherTok{\textless{}{-}}\NormalTok{ n\_premi }\SpecialCharTok{/}\NormalTok{ n\_total }\CommentTok{\# the sample proportion}
+\NormalTok{q\_hat }\OtherTok{\textless{}{-}} \DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ p\_hat }\CommentTok{\# q = (1 {-} p)}
+
+\CommentTok{\# Since we are calculating a 95\% CL, then calculate zstar}
+\NormalTok{zstar }\OtherTok{\textless{}{-}} \FunctionTok{qnorm}\NormalTok{(}\FloatTok{0.975}\NormalTok{) }\DocumentationTok{\#\# equals 1.959964}
+\end{Highlighting}
+\end{Shaded}
+
+The margin of error for a proportion is:
+
+\$ MoE \$ = \$ (\{z\}\_\{\frac{\alpha }{2}\}
+(\sqrt{\frac{\hat{p}\hat{q}}{n}}), where \hat{q}\text{ = 1 - }\hat{p} \$
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# premature \textless{}{-} length(nc$premie["premie"])}
+\CommentTok{\# \# full\_term \textless{}{-} nc$premie["full term"]}
+\CommentTok{\# n\_premature \textless{}{-} length(premature)}
+\CommentTok{\# n\_total \textless{}{-} length(nc$premie)}
+\CommentTok{\# n\_premature}
+\CommentTok{\# n\_total}
+\CommentTok{\# }
+\CommentTok{\# }
+\CommentTok{\# xbar\_premature \textless{}{-} mean(n\_premature)}
+\CommentTok{\# }
+\CommentTok{\# }
+\CommentTok{\# \# premature \textless{}{-} nc$premie["premie"]}
+\CommentTok{\# xbar\_premature \textless{}{-} mean(premature)}
+\CommentTok{\# s\_premature \textless{}{-}sd(premature)}
+\CommentTok{\# n\_premature \textless{}{-} length(premature)}
+\CommentTok{\# }
+\CommentTok{\# se\_premature \textless{}{-} s\_premature / sqrt(n\_premature)}
+\CommentTok{\# me\_premature \textless{}{-} zstar * se\_premature}
+\CommentTok{\# }
+\CommentTok{\# \# The bounds of the confidence interval can be calculated as}
+\CommentTok{\# xbar\_premature {-} me\_premature}
+\CommentTok{\# xbar\_premature + me\_premature}
+\end{Highlighting}
+\end{Shaded}
+
+The bounds of the confidence interval can be calculated as:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# The bounds of the confidence interval can be calculated as}
+\CommentTok{\# xbar\_premature {-} me\_premature}
+\CommentTok{\# xbar\_premature + me\_premature}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{6}
+\item
+  Calculate a 95\% bootstrap confidence interval for the proportion of
+  premature births. How does it compare to the interval in question 6?
+\item
+  In the United States, the proportion of live births that are premature
+  is approximately 10\%. Test the hypothesis that the proportion of
+  premature births in is greater than 10\%.
+\end{enumerate}
+
+\end{document}
